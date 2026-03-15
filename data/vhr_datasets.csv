@@ -1,9 +1,9 @@
-Dataset,Task,Domain,Modalities/Sensor,GSD (m),N_Samples,Classes,License,In_GEO_Bench_2,In_Pangaea,Link_Reference
-TreeSatAI,Classification,Tree Species,"Aerial RGB, Sentinel-1, Sentinel-2",0.2 - 10,50381,15,CC-BY-4.0,Yes,No,https://essd.copernicus.org/articles/15/681/2023/
-Dynamic EarthNet,Semantic Segmentation,LULC (temporal),PlanetFusion (RGB+NIR),3,1000,7,CC-BY-4.0,Yes,Yes,https://earthnets.github.io/
-FLAIR 2,Semantic Segmentation,LULC,"Aerial RGBN+DEM, Sentinel-2",0.2,8093,13,Open License 2.0,Yes,No,https://ignf.github.io/FLAIR/
-SpaceNet 2,Semantic Segmentation,Building,Worldview (RGB/Pan),0.3,9608,2,CC-BY-SA-4.0,Yes,No,https://spacenet.ai/spacenet-buildings-dataset-v2/
-SpaceNet 7,Semantic Segmentation,Building (Temporal),Planet (RGB),3,5692,2,CC-BY-SA-4.0,Yes,Yes,https://spacenet.ai/sn7-challenge/
+Dataset,Task,Domain,Modalities,GSD (m),N_Samples,Classes,License,In_GEO_Bench_2,In_Pangaea,Link_Reference
+TreeSatAI,Classification,Tree Species,S2 TS,10,28000,13,CC-BY-4.0,Yes,No,https://essd.copernicus.org/articles/15/681/2023/
+Dynamic EarthNet,Semantic Segmentation,LULC (temporal),Planet RGB+NIR,3,1000,7,CC-BY-4.0,Yes,Yes,https://earthnets.github.io/
+FLAIR 2,Semantic Segmentation,LULC,Aerial RGBN+DEM,0.2,8093,13,Open License 2.0,Yes,No,https://ignf.github.io/FLAIR/
+SpaceNet 2,Semantic Segmentation,Building,Worldview,0.3,9608,2,CC-BY-SA-4.0,Yes,No,https://spacenet.ai/spacenet-buildings-dataset-v2/
+SpaceNet 7,Semantic Segmentation,Building,Planet Only RGB,3,5692,2,CC-BY-SA-4.0,Yes,Yes,https://spacenet.ai/sn7-challenge/
 EverWatch,Object Detection,Bird species,Aerial RGB,0.1,5125,9,CC0,Yes,No,https://zenodo.org/records/10811969
 m-nzcattle,Object Detection,Cattle,Aerial RGB,0.1,655,2,CC-BY-4.0,Yes,No,https://github.com/diababuaiadah/Cattle-Detection
 Potsdam,Semantic Segmentation,Urban,"Aerial (IR, R, G, DSM)",0.05,38,6,ISPRS Research,No,No,https://www.isprs.org/education/benchmarks/UrbanSemLab/2d-sem-label-potsdam.aspx
