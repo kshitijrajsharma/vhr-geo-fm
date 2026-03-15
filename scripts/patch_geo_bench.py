@@ -12,6 +12,45 @@ def format_metric(val: float, err: float) -> str:
     return f"{val * 100:.1f} ± {err * 100:.1f}"
 
 
+def map_model_category(model_name: str) -> str:
+    """Classifies models into their training data provenance categories."""
+    vhr_aerial = {
+        "DinoV3-ViT-L-SAT",
+        "DOFA-ViT 300M",
+        "DOFA-ViT-B",
+        "Clay-V1 ViT-B",
+        "Satlas-SwinB-Naip",
+        "Satlas-SwinB-Naip",
+    }
+    natural_images = {
+        "Resnet50-ImageNet",
+        "ConvNext-Large-ImageNet",
+        "ConvNext-XLarge-ImageNet",
+        "DinoV3-ConvNext-Large-WEB",
+    }
+    satellite_geo_fm = {
+        "Resnet50-DeCUR",
+        "Satlas-Swin 100M",
+        "Satlas-Resnet50",
+        "Prithvi-EO-V2-100",
+        "Prithvi-EO-V2 300M",
+        "Prithvi-EO-V2 300M TL",
+        "Prithvi-EO-V2 600M",
+        "Prithvi-EO-V2 600M TL",
+        "Prithvi-EO-V1-100",
+        "TerraMind-V1-Base",
+        "TerraMind-V1-Large",
+    }
+
+    if model_name in vhr_aerial:
+        return "Native-VHR-GeoFM"
+    if model_name in natural_images:
+        return "CV-General-FM"
+    if model_name in satellite_geo_fm:
+        return "GeoFM-LowRes"
+    return "Unknown"
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument(
@@ -47,7 +86,6 @@ def main() -> None:
 
     combined_df = pd.concat(all_results, ignore_index=True)
 
-    # Normalization must precede IQM bootstrap to maintain mathematical parity with official benchmarks
     normalizer = compute_tools.load_normalizer(benchmark_name="leaderboard_combined")
     new_metric = normalizer.normalize_data_frame(df=combined_df, metric="test metric")
 
@@ -56,7 +94,6 @@ def main() -> None:
     compiled_metrics = []
 
     for (sub, backbone), bb_df in dimension_data.groupby(["submission", "backbone"]):
-        # Drop incomplete submissions to prevent skewed aggregation scores
         if set(bb_df["dataset"].unique()) != req_set:
             continue
 
@@ -65,8 +102,10 @@ def main() -> None:
         ]
         dim_val, dim_err = bb_dim_iqms.mean(), sem(bb_dim_iqms)
 
+        display_name = model_info["BACKBONE_NAMES"].get(backbone, backbone)
         row = {
-            "Model": model_info["BACKBONE_NAMES"].get(backbone, backbone),
+            "Model": display_name,
+            "Category": map_model_category(display_name),
             "# Params": model_info["MODEL_SIZE"].get(backbone, "-"),
             "Submission": str(sub).split("-")[0],
             "Under 10M Resolution": format_metric(dim_val, dim_err),
