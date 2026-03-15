@@ -1,7 +1,10 @@
 [project]
 name = "vhr-geo-fm"
-version = "0.1.0"
+version = "0.0.1"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13"
-dependencies = []
+dependencies = [
+    "geopandas>=1.1.3",
+    "ipykernel>=7.2.0",
+]
