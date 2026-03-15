@@ -19,6 +19,10 @@ By default, the script evaluates the core high-resolution datasets. When run wit
    uv run python patch_geo_bench.py
    ```
 
+## Results
+
+Results after running the scripts are in data folder , generated on march 15 2026
+
 ## References
 
 - [GEO-Bench-2-Leaderboard](https://github.com/The-AI-Alliance/GEO-Bench-2-Leaderboard)  
