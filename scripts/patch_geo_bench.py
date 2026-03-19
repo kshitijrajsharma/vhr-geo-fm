@@ -1,3 +1,5 @@
+# uv pip install tabulate scipy pandas
+
 import argparse
 import json
 import os
@@ -59,6 +61,11 @@ def main() -> None:
         help="Add extra object detection datasets (everwatch, nzcattle)",
     )
     parser.add_argument(
+        "--frozen",
+        action="store_true",
+        help="Use frozen backbone results instead of fully finetuned",
+    )
+    parser.add_argument(
         "--out",
         type=str,
         default=None,
@@ -80,7 +87,8 @@ def main() -> None:
         csv_path = os.path.join(RESULTS_DIR, sub, "results_and_parameters.csv")
         if os.path.isfile(csv_path):
             df = pd.read_csv(csv_path)
-            if not df.empty and df["frozen_or_full_ft"].iloc[0] == "full_ft":
+            ft_filter = "frozen" if args.frozen else "full_ft"
+            if not df.empty and df["frozen_or_full_ft"].iloc[0] == ft_filter:
                 df["submission"] = sub
                 all_results.append(df)
 
