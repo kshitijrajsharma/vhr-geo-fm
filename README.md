@@ -281,7 +281,7 @@ Source: [GEO-Bench-2 Leaderboard](https://github.com/The-AI-Alliance/GEO-Bench-2
 
 - DINOv3-ViT-L-SAT dominates frozen evaluation (55.4), confirming its pretrained features are the most transferable to VHR without adaptation
 - VHR-FM models occupy 3 of top 4 ranks
-- ConvNext-XL drops from FT 81.1 to frozen 35.6 (-45.5 pts), the largest absolute drop — its strength relies on adaptation capacity, not pretrained feature relevance
-- LowRes-FM models collapse in frozen mode — Satlas-Swin goes from FT 48.1 to frozen -22.9 (-71 pts)
+- ConvNext-XL drops from FT 81.1 to frozen 35.6 (-45.5 pts), the largest absolute drop ; its strength relies on adaptation capacity, not pretrained feature relevance
+- LowRes-FM models collapse in frozen mode ; Satlas-Swin goes from FT 48.1 to frozen -22.9 (-71 pts)
 - TerraMind-V1-L is strong on DynEN (81.5, highest) but catastrophic on SN2 (-35.0) and TreeSat (-42.4), suggesting Sentinel features only transfer to lower-res VHR (3m)
 - Models pretrained exclusively on Sentinel data substantially underperform in both modes; VHR pretraining produces genuinely more relevant feature representations, not just better initialization
