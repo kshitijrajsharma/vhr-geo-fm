@@ -7,7 +7,7 @@ Investigate whether existing geospatial foundation models (GeoFMs) are sufficien
 **Key research questions:**
 
 - Do existing models fail on VHR tasks if they were not pretrained on VHR data?
-- Do VHR tasks actually require VHR pretraining, or can models trained on natural images adapt well enough?
+- Do VHR tasks actually require VHR pretraining, or can models trained on natural/public low res sentinel images adapt well enough?
 - If existing models are insufficient, should we adapt an existing FM or train from scratch efficiently?
 
 **Scope decisions:**
