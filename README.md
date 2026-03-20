@@ -231,42 +231,57 @@ Results were accessed & generated on 2026-03-15 (fine-tuned) and 2026-03-20 (fro
 
 Normalized IQM scores from GEO-Bench-2 after full fine-tuning. Includes object detection datasets (EverWatch, NZCattle) via patched evaluation (`--extra` flag).
 
-| # | Model | Category | Params | Score | SN2 | TreeSat | FLAIR2 | DynEN | SN7 | EverW | NZCat |
-|---|-------|----------|--------|-------|-----|---------|--------|-------|-----|-------|-------|
-| 1 | ConvNext-XL-ImgNet | CV-FM | 390M | 86.9 +/- 0.1 | 85.8 | 84.2 | 65.7 | 73.4 | 91.5 | 96.6 | 96.5 |
-| 2 | DINOv3-ConvNext-WEB | CV-FM | 230M | 80.1 +/- 0.1 | 95.3 | 92.5 | 80.6 | 28.3 | 92.5 | 52.4 | 75.0 |
-| 3 | DINOv3-ViT-L-SAT | VHR-FM | 300M | 77.8 +/- 0.2 | 73.4 | 93.7 | 98.5 | 74.5 | 89.2 | 36.1 | 57.3 |
-| 4 | ConvNext-L-ImgNet | CV-FM | 230M | 77.0 +/- 0.1 | 81.1 | 86.0 | 71.7 | 44.2 | 87.1 | 59.7 | 82.0 |
-| 5 | DOFA-ViT 300M | VHR-FM | 300M | 62.7 +/- 0.2 | 64.6 | 78.4 | 83.2 | 40.1 | 76.0 | 20.0 | 44.0 |
-| 6 | Clay-V1 ViT-B | VHR-FM | 100M | 60.7 +/- 0.2 | 65.8 | 69.4 | 65.6 | 49.8 | 96.9 | 43.5 | 49.5 |
-| 7 | TerraMind-V1-L | LowRes-FM | 300M | 55.7 +/- 0.1 | 64.3 | 50.6 | 42.6 | 96.2 | 76.9 | 30.7 | 48.9 |
-| 8 | Satlas-SwinB-NAIP | VHR-FM | 100M | 53.4 +/- 0.1 | 49.2 | 42.4 | 59.0 | 5.6 | 84.6 | 51.0 | 69.3 |
-| 9 | Satlas-Swin 100M | LowRes-FM | 100M | 50.8 +/- 0.2 | 41.5 | 47.8 | 40.7 | 50.8 | 84.8 | 43.1 | 66.9 |
-| 10 | Prithvi-V2-600M | LowRes-FM | 600M | 47.8 +/- 0.1 | 76.3 | 52.3 | 40.7 | 30.8 | 90.4 | 44.1 | 4.6 |
-| 11 | Prithvi-V2-300M | LowRes-FM | 300M | 43.8 +/- 0.2 | 61.8 | 35.0 | 32.9 | 41.7 | 81.4 | 29.5 | 52.6 |
-| 12 | TerraMind-V1-B | LowRes-FM | 100M | 42.1 +/- 0.1 | 41.0 | 39.8 | 40.5 | 34.1 | 75.4 | 28.2 | 45.7 |
-| 13 | ResNet50-ImgNet | CV-FM | 25M | 36.1 +/- 0.1 | 52.8 | 28.7 | 42.6 | 23.2 | 81.5 | 21.6 | 28.9 |
-| 14 | ResNet50-DeCUR | LowRes-FM | 25M | 24.3 +/- 0.1 | 3.3 | 20.8 | 18.7 | 54.7 | 72.8 | 3.9 | 30.7 |
+| #  | Model                | Category  | Params | Score        | SN2  | TreeSat | FLAIR2 | DynEN | SN7  | EverW | NZCat |
+|----|----------------------|-----------|--------|--------------|------|---------|--------|-------|------|-------|-------|
+| 1  | ConvNext-XL-ImgNet   | CV-FM     | 390M   | 86.9 +/- 0.1 | 85.8 | 84.2    | 65.7   | 73.4  | 91.5 | 96.6  | 96.5  |
+| 2  | DINOv3-ConvNext-WEB  | CV-FM     | 230M   | 80.1 +/- 0.1 | 95.3 | 92.5    | 80.6   | 28.3  | 92.5 | 52.4  | 75.0  |
+| 3  | DINOv3-ViT-L-SAT     | VHR-FM    | 300M   | 77.8 +/- 0.2 | 73.4 | 93.7    | 98.5   | 74.5  | 89.2 | 36.1  | 57.3  |
+| 4  | ConvNext-L-ImgNet    | CV-FM     | 230M   | 77.0 +/- 0.1 | 81.1 | 86.0    | 71.7   | 44.2  | 87.1 | 59.7  | 82.0  |
+| 5  | DOFA-ViT 300M        | VHR-FM    | 300M   | 62.7 +/- 0.2 | 64.6 | 78.4    | 83.2   | 40.1  | 76.0 | 20.0  | 44.0  |
+| 6  | Clay-V1 ViT-B        | VHR-FM    | 100M   | 60.7 +/- 0.2 | 65.8 | 69.4    | 65.6   | 49.8  | 96.9 | 43.5  | 49.5  |
+| 7  | TerraMind-V1-L       | LowRes-FM | 300M   | 55.7 +/- 0.1 | 64.3 | 50.6    | 42.6   | 96.2  | 76.9 | 30.7  | 48.9  |
+| 8  | Satlas-SwinB-NAIP    | VHR-FM    | 100M   | 53.4 +/- 0.1 | 49.2 | 42.4    | 59.0   | 5.6   | 84.6 | 51.0  | 69.3  |
+| 9  | Satlas-Swin 100M     | LowRes-FM | 100M   | 50.8 +/- 0.2 | 41.5 | 47.8    | 40.7   | 50.8  | 84.8 | 43.1  | 66.9  |
+| 10 | Prithvi-V2-600M      | LowRes-FM | 600M   | 47.8 +/- 0.1 | 76.3 | 52.3    | 40.7   | 30.8  | 90.4 | 44.1  | 4.6   |
+| 11 | Prithvi-V2-300M      | LowRes-FM | 300M   | 43.8 +/- 0.2 | 61.8 | 35.0    | 32.9   | 41.7  | 81.4 | 29.5  | 52.6  |
+| 12 | TerraMind-V1-B       | LowRes-FM | 100M   | 42.1 +/- 0.1 | 41.0 | 39.8    | 40.5   | 34.1  | 75.4 | 28.2  | 45.7  |
+| 13 | ResNet50-ImgNet      | CV-FM     | 25M    | 36.1 +/- 0.1 | 52.8 | 28.7    | 42.6   | 23.2  | 81.5 | 21.6  | 28.9  |
+| 14 | ResNet50-DeCUR       | LowRes-FM | 25M    | 24.3 +/- 0.1 | 3.3  | 20.8    | 18.7   | 54.7  | 72.8 | 3.9   | 30.7  |
 
-Categories: **VHR-FM** = pretrained on VHR imagery, **CV-FM** = pretrained on natural/web images, **LowRes-FM** = pretrained on Sentinel (>=10m). SN2=SpaceNet2, SN7=SpaceNet7, DynEN=DynamicEarthNet, EverW=EverWatch, NZCat=NZCattle.
+Categories: **VHR-FM** = pretrained on VHR imagery, **CV-FM** = pretrained on natural/web images, **LowRes-FM** = pretrained on Sentinel (>=10m).
+SN2 = SpaceNet2, SN7 = SpaceNet7, DynEN = DynamicEarthNet, EverW = EverWatch, NZCat = NZCattle.
 
-**Key observations:** CV-FM models (ConvNext, DINOv3-WEB) top the leaderboard after fine-tuning, outperforming native VHR GeoFMs. DINOv3-ViT-L-SAT is the strongest VHR-aware model. LowRes-FM models (TerraMind, Prithvi) fall 30+ points behind, confirming Sentinel-only pretraining is insufficient for VHR. Natural-image pretraining transfers well to VHR RGB but fails on multispectral tasks.
+**Key observations:**
+
+- CV-FM models (ConvNext, DINOv3-WEB) top the leaderboard after fine-tuning, outperforming native VHR GeoFMs
+- DINOv3-ViT-L-SAT is the strongest VHR-aware model
+- LowRes-FM models (TerraMind, Prithvi) fall 30+ points behind, confirming Sentinel-only pretraining is insufficient for VHR
+- Natural-image pretraining transfers well to VHR RGB but fails on multispectral tasks
 
 ### Model Performance on VHR Datasets: Frozen Encoder
 
-Normalized IQM scores from GEO-Bench-2 with frozen encoder. Object detection datasets not available in frozen mode, so scores cover only the same 5 classification/segmentation datasets. The **FT Score** column shows the fine-tuned aggregate on these same 5 datasets (from `geo-bench2-results-vhr-base.csv`) for direct comparison. Source: [GEO-Bench-2 Leaderboard](https://github.com/The-AI-Alliance/GEO-Bench-2-Leaderboard) with `--frozen` flag.
+Normalized IQM scores from GEO-Bench-2 with frozen encoder. Object detection datasets not available in frozen mode, so scores cover only 5 classification/segmentation datasets. The **FT Score** column shows the fine-tuned aggregate on these same 5 datasets (from `geo-bench2-results-vhr-base.csv`) for direct comparison.
 
-| # | Model | Category | Params | Frozen | FT Score | SN2 | TreeSat | FLAIR2 | DynEN | SN7 |
-|---|-------|----------|--------|--------|----------|-----|---------|--------|-------|-----|
-| 1 | DINOv3-ViT-L-SAT | VHR-FM | 300M | 55.4 +/- 0.3 | 88.4 | 44.9 | 1.9 | 58.0 | 71.9 | 81.3 |
-| 2 | DINOv3-ConvNext-WEB | CV-FM | 230M | 46.0 +/- 0.3 | 88.3 | 36.4 | -18.7 | 65.4 | 33.2 | 82.6 |
-| 3 | Clay-V1 ViT-B | VHR-FM | 100M | 38.0 +/- 0.4 | 67.4 | 18.1 | -18.0 | 51.8 | 36.5 | 89.2 |
-| 4 | DOFA-ViT 300M | VHR-FM | 300M | 36.4 +/- 0.3 | 73.5 | 13.9 | -3.0 | 57.7 | 35.2 | 73.3 |
-| 5 | ConvNext-XL-ImgNet | CV-FM | 390M | 35.6 +/- 0.2 | 81.1 | 37.4 | -0.2 | 38.9 | 32.2 | 82.2 |
-| 6 | Prithvi-V2-600M | LowRes-FM | 600M | 15.4 +/- 0.3 | 56.0 | 7.5 | -28.9 | 3.0 | 37.7 | 79.6 |
-| 7 | TerraMind-V1-L | LowRes-FM | 300M | 7.8 +/- 0.1 | 63.2 | -35.0 | -42.4 | -2.6 | 81.5 | 65.0 |
-| 8 | ResNet50-DeCUR | LowRes-FM | 25M | -0.5 +/- 0.2 | 31.5 | -37.8 | -39.8 | -4.1 | 36.8 | 68.1 |
-| 9 | Satlas-ResNet50 | LowRes-FM | 25M | -12.5 +/- 0.3 | 44.5 | -67.1 | -65.2 | -21.0 | 55.6 | 65.5 |
-| 10 | Satlas-Swin 100M | LowRes-FM | 100M | -22.9 +/- 0.3 | 48.1 | -86.2 | -72.5 | -27.7 | 35.7 | 73.1 |
+Source: [GEO-Bench-2 Leaderboard](https://github.com/The-AI-Alliance/GEO-Bench-2-Leaderboard) with `--frozen` flag.
 
-**Key observations:** DINOv3-ViT-L-SAT dominates frozen evaluation (55.4), confirming its pretrained features are the most transferable to VHR without adaptation. VHR-FM models occupy 3 of top 4 ranks. ConvNext-XL drops from FT 81.1 to frozen 35.6 (-45.5 pts), the largest absolute drop, showing its strength relies on adaptation capacity not pretrained feature relevance. LowRes-FM models collapse in frozen mode — Satlas-Swin goes from FT 48.1 to frozen -22.9 (-71 pts). TerraMind-V1-L is strong on DynEN (81.5, highest) but catastrophic on SN2 (-35.0) and TreeSat (-42.4), suggesting Sentinel features only transfer to lower-res VHR (3m). Models pretrained exclusively on Sentinel data substantially underperform on VHR tasks in both modes; VHR pretraining produces genuinely more relevant feature representations, not just better initialization.
+| #  | Model                | Category  | Params | Frozen        | FT Score | SN2   | TreeSat | FLAIR2 | DynEN | SN7  |
+|----|----------------------|-----------|--------|---------------|----------|-------|---------|--------|-------|------|
+| 1  | DINOv3-ViT-L-SAT     | VHR-FM    | 300M   | 55.4 +/- 0.3  | 88.4     | 44.9  | 1.9     | 58.0   | 71.9  | 81.3 |
+| 2  | DINOv3-ConvNext-WEB  | CV-FM     | 230M   | 46.0 +/- 0.3  | 88.3     | 36.4  | -18.7   | 65.4   | 33.2  | 82.6 |
+| 3  | Clay-V1 ViT-B        | VHR-FM    | 100M   | 38.0 +/- 0.4  | 67.4     | 18.1  | -18.0   | 51.8   | 36.5  | 89.2 |
+| 4  | DOFA-ViT 300M        | VHR-FM    | 300M   | 36.4 +/- 0.3  | 73.5     | 13.9  | -3.0    | 57.7   | 35.2  | 73.3 |
+| 5  | ConvNext-XL-ImgNet   | CV-FM     | 390M   | 35.6 +/- 0.2  | 81.1     | 37.4  | -0.2    | 38.9   | 32.2  | 82.2 |
+| 6  | Prithvi-V2-600M      | LowRes-FM | 600M   | 15.4 +/- 0.3  | 56.0     | 7.5   | -28.9   | 3.0    | 37.7  | 79.6 |
+| 7  | TerraMind-V1-L       | LowRes-FM | 300M   | 7.8 +/- 0.1   | 63.2     | -35.0 | -42.4   | -2.6   | 81.5  | 65.0 |
+| 8  | ResNet50-DeCUR       | LowRes-FM | 25M    | -0.5 +/- 0.2  | 31.5     | -37.8 | -39.8   | -4.1   | 36.8  | 68.1 |
+| 9  | Satlas-ResNet50      | LowRes-FM | 25M    | -12.5 +/- 0.3 | 44.5     | -67.1 | -65.2   | -21.0  | 55.6  | 65.5 |
+| 10 | Satlas-Swin 100M     | LowRes-FM | 100M   | -22.9 +/- 0.3 | 48.1     | -86.2 | -72.5   | -27.7  | 35.7  | 73.1 |
+
+**Key observations:**
+
+- DINOv3-ViT-L-SAT dominates frozen evaluation (55.4), confirming its pretrained features are the most transferable to VHR without adaptation
+- VHR-FM models occupy 3 of top 4 ranks
+- ConvNext-XL drops from FT 81.1 to frozen 35.6 (-45.5 pts), the largest absolute drop — its strength relies on adaptation capacity, not pretrained feature relevance
+- LowRes-FM models collapse in frozen mode — Satlas-Swin goes from FT 48.1 to frozen -22.9 (-71 pts)
+- TerraMind-V1-L is strong on DynEN (81.5, highest) but catastrophic on SN2 (-35.0) and TreeSat (-42.4), suggesting Sentinel features only transfer to lower-res VHR (3m)
+- Models pretrained exclusively on Sentinel data substantially underperform in both modes; VHR pretraining produces genuinely more relevant feature representations, not just better initialization
