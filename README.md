@@ -33,16 +33,16 @@ Investigate whether existing geospatial foundation models (GeoFMs) are sufficien
 
 | Sensor | Operator | Panchromatic | Multispectral | Bands | Notes |
 |--------|----------|-------------|---------------|-------|-------|
-| WorldView-3 | Maxar | 0.3 m | 1.24 m | 8 VNIR + 8 SWIR | Highest spectral diversity |
-| WorldView Legion | Maxar | 0.3 m | ~1.2 m | VNIR | Constellation for high revisit |
-| Pleiades Neo 3/4 | Airbus | 0.3 m | 1.2 m | 6 (incl. Deep Blue, Red-Edge) | 15cm pansharpened product |
-| WorldView-2 | Maxar | 0.5 m | 1.84 m | 8 VNIR | First 8-band VHR satellite |
-| GeoEye-1 | Maxar | 0.5 m | 1.65 m | 4 VNIR | High geolocation accuracy |
-| Pleiades-1A/1B | Airbus | 0.5 m | 2.0 m | 4 (RGB+NIR) | Twin constellation |
-| SkySat | Planet | 0.5 m | 0.8 m native | 4 (RGB+NIR) | High-cadence tasking |
-| SPOT 6/7 | Airbus | 1.5 m | 6.0 m | 4 (RGB+NIR) | Wide swath (60km) |
-| Gaofen-2 | CNSA | 0.8 m | 3.2 m | 4 (RGB+NIR) | Chinese civilian VHR |
-| PlanetScope (Dove) | Planet | N/A | 3-5 m | 4-8 bands | Daily global coverage |
+| WorldView-3 | [Maxar](https://earth.esa.int/eogateway/missions/worldview-3) | 0.31 m | 1.24 m | 8 VNIR + 8 SWIR | Highest spectral diversity |
+| WorldView Legion | [Maxar](https://resources.maxar.com/data-sheets/worldview-legion) | 0.29 m | 1.16 m | VNIR | Constellation for high revisit |
+| Pleiades Neo 3/4 | [Airbus](https://space-solutions.airbus.com/imagery/our-optical-and-radar-satellite-imagery/pleiades-neo/) | 0.30 m | 1.2 m | 6 (incl. Deep Blue, Red-Edge) | HD15 enhanced product |
+| WorldView-2 | [Maxar](https://earth.esa.int/eogateway/missions/worldview-2) | 0.46 m | 1.84 m | 8 VNIR | First 8-band VHR satellite |
+| GeoEye-1 | [Maxar](https://earth.esa.int/eogateway/missions/geoeye-1) | 0.41 m | 1.64 m | 4 VNIR | High geolocation accuracy |
+| Pleiades-1A/1B | [Airbus](https://earth.esa.int/eogateway/missions/pleiades) | 0.50 m | 2.0 m | 4 (RGB+NIR) | Twin constellation |
+| SkySat | [Planet](https://docs.planet.com/data/imagery/skysat/) | 0.50 m | 0.50 m (ortho) | 4 MS + 1 Pan | Super-resolution ortho product |
+| SPOT 6/7 | [Airbus](https://earth.esa.int/eogateway/missions/spot-6) | 1.5 m | 6.0 m | 4 (RGB+NIR) | Wide swath (60km) |
+| Gaofen-2 | [CNSA](https://earth.esa.int/eogateway/missions/gaofen-2) | 0.81 m | 3.24 m | 4 (RGB+NIR) | Chinese civilian VHR |
+| PlanetScope (Dove) | [Planet](https://docs.planet.com/data/imagery/planetscope/) | N/A | 3-5 m | 4-8 bands | Daily global coverage |
 
 Satellite VHR images cover large areas but may have atmospheric distortion, off-nadir angles, and varying revisit depending on constellation. Upcoming: Pleiades Neo Next (~20cm class), Planet Pelican.
 
@@ -56,34 +56,34 @@ Source: [GEO-Bench-2](https://arxiv.org/pdf/2511.15658)
 
 **Classification**
 
-| Dataset | Sensor | Resolution | Domain | Category | License | Resource |
-|---------|--------|------------|--------|----------|---------|----------|
-| [TreeSatAI](https://essd.copernicus.org/articles/15/681/2023/) | S2 TS (benchmark); full archive also has S1 SAR + 0.2m aerial CIR | 10 m (S2) / 0.2 m (aerial) | Forestry, 13 tree species | Satellite + Aerial | CC-BY-4.0 | [Paper](https://essd.copernicus.org/articles/15/681/2023/) · [Zenodo](https://doi.org/10.5281/zenodo.6598390) |
+| Dataset | Sensor | Resolution | Domain | Category | License |
+|---------|--------|------------|--------|----------|---------|
+| [TreeSatAI](https://essd.copernicus.org/articles/15/681/2023/) | S2 TS (benchmark); full archive also has S1 SAR + 0.2m aerial CIR | 10 m (S2) / 0.2 m (aerial) | Forestry, 13 tree species | Satellite + Aerial | CC-BY-4.0 |
 
-- 50,381 image triplets, Lower Saxony, Germany. Multi-label, 20 species / 15 genera. GEO-Bench-2 uses S2 TS only.
+- 50,381 image triplets, Lower Saxony, Germany. Multi-label, 20 species / 15 genera. GEO-Bench-2 uses S2 TS only. [Zenodo](https://doi.org/10.5281/zenodo.6598390)
 
 **Semantic Segmentation**
 
-| Dataset | Sensor | Resolution | Domain | Category | License | Resource |
-|---------|--------|------------|--------|----------|---------|----------|
-| [DynamicEarthNet](https://github.com/aysim/dynnet) | Planet PlanetScope (RGB+NIR) | 3 m | LULC change, 7 classes | Satellite VHR | CC-BY-4.0 | [Paper](https://arxiv.org/abs/2203.12560) · [Data](https://mediatum.ub.tum.de/1650201) · [GitHub](https://github.com/aysim/dynnet) |
-| [FLAIR #2](https://ignf.github.io/FLAIR/) | Aerial RGBN (0.2 m) + S2 TS (aux) | 0.2 m (aerial) | Land cover, 13 classes | Aerial VHR | Open License 2.0 | [Project](https://ignf.github.io/FLAIR/) · [Paper](https://arxiv.org/abs/2310.13336) · [GitHub](https://github.com/IGNF/FLAIR-2) · [HuggingFace](https://huggingface.co/datasets/IGNF/FLAIR-1-2) |
-| [SpaceNet 2](https://registry.opendata.aws/spacenet/) | WorldView-2/3 (8-band pansharpened) | 0.3 m (WV-3) / 0.5 m (WV-2) | Urban, building footprints, 2 classes | Satellite VHR | CC-BY-SA-4.0 | [AWS](https://registry.opendata.aws/spacenet/) · [Paper](https://arxiv.org/abs/1807.01232) |
-| [SpaceNet 7](https://registry.opendata.aws/spacenet/) | Planet Dove (RGB+NIR) | 4 m | Urban, multi-temporal buildings, 2 classes | Satellite VHR | CC-BY-SA-4.0 | [Paper](https://arxiv.org/abs/2102.04420) · [AWS](https://registry.opendata.aws/spacenet/) |
+| Dataset | Sensor | Resolution | Domain | Category | License |
+|---------|--------|------------|--------|----------|---------|
+| [DynamicEarthNet](https://arxiv.org/abs/2203.12560) | Planet PlanetScope (RGB+NIR) | 3 m | LULC change, 7 classes | Satellite VHR | CC-BY-4.0 |
+| [FLAIR #2](https://arxiv.org/abs/2310.13336) | Aerial RGBN (0.2 m) + S2 TS (aux) | 0.2 m (aerial) | Land cover, 13 classes | Aerial VHR | Open License 2.0 |
+| [SpaceNet 2](https://arxiv.org/abs/1807.01232) | WorldView-2/3 (8-band pansharpened) | 0.3 m (WV-3) / 0.5 m (WV-2) | Urban, building footprints, 2 classes | Satellite VHR | CC-BY-SA-4.0 |
+| [SpaceNet 7](https://arxiv.org/abs/2102.04420) | Planet Dove (RGB+NIR) | 4 m | Urban, multi-temporal buildings, 2 classes | Satellite VHR | CC-BY-SA-4.0 |
 
-- **DynamicEarthNet**: 75 AOIs, 6 continents, daily imagery (2018-2019), monthly labels.
-- **FLAIR #2**: 20B+ annotated pixels, metropolitan France, 55 spatial domains.
-- **SpaceNet 2**: 5 cities (Rio, Las Vegas, Shanghai, Khartoum, Paris).
-- **SpaceNet 7**: 100+ geographies, 24 monthly time steps, 11M+ building annotations.
+- **DynamicEarthNet**: 75 AOIs, 6 continents, daily imagery (2018-2019), monthly labels. [Data](https://mediatum.ub.tum.de/1650201)
+- **FLAIR #2**: 20B+ annotated pixels, metropolitan France, 55 spatial domains. [HuggingFace](https://huggingface.co/datasets/IGNF/FLAIR-1-2)
+- **SpaceNet 2**: 5 cities (Rio, Las Vegas, Shanghai, Khartoum, Paris). [AWS](https://registry.opendata.aws/spacenet/)
+- **SpaceNet 7**: 100+ geographies, 24 monthly time steps, 11M+ building annotations. [AWS](https://registry.opendata.aws/spacenet/)
 
 **Object Detection**
 
-| Dataset | Sensor | Resolution | Domain | Category | License | Resource |
-|---------|--------|------------|--------|----------|---------|----------|
-| [EverWatch](https://zenodo.org/records/10811969) | UAS/drone aerial RGB | 0.1 m | Ecology, wading birds, 9 classes | Aerial VHR (drone) | CC0 | [Zenodo](https://zenodo.org/records/10811969) · [Project](https://everglades.weecology.org/data/uav/) · [GitHub](https://github.com/weecology/everwatch-workflow) |
-| [NZ Cattle](https://zenodo.org/records/5908869) | Aerial RGB (LINZ) | 0.1 m | Agriculture, cattle detection, 2 classes | Aerial VHR | CC-BY-4.0 | [Zenodo](https://zenodo.org/records/5908869) |
+| Dataset | Sensor | Resolution | Domain | Category | License |
+|---------|--------|------------|--------|----------|---------|
+| [EverWatch](https://zenodo.org/records/10811969) | UAS/drone aerial RGB | 0.1 m | Ecology, wading birds, 9 classes | Aerial VHR (drone) | CC0 |
+| [NZ Cattle](https://zenodo.org/records/5908869) | Aerial RGB (LINZ) | 0.1 m | Agriculture, cattle detection, 2 classes | Aerial VHR | CC-BY-4.0 |
 
-- **EverWatch**: 5,125 images, Everglades, Florida.
+- **EverWatch**: 5,125 images, Everglades, Florida. [GitHub](https://github.com/weecology/everwatch-workflow)
 - **NZ Cattle**: 655 images, 29,803 annotated cows, New Zealand.
 
 ### PanGea (PANGAEA) VHR Datasets
@@ -92,10 +92,10 @@ Source: [PANGAEA](https://arxiv.org/abs/2412.04204) · [GitHub](https://github.c
 
 **Core VHR Datasets (< 10 m)**
 
-| Dataset | Sensor | Resolution | Domain | Category | License | Resource |
-|---------|--------|------------|--------|----------|---------|----------|
-| [xView2 (xBD)](https://xview2.org/dataset) | Maxar WorldView-3 (RGB) | 0.3-0.5 m | HADR, building damage, 5 classes | Satellite VHR | CC-BY-NC-SA-4.0 | [Dataset](https://xview2.org/dataset) · [Paper](https://arxiv.org/abs/1911.09296) |
-| [Five Billion Pixels](https://x-ytong.github.io/project/Five-Billion-Pixels.html) | Gaofen-2 (B/G/R/NIR) | 4 m | Land cover / urban, 24 classes | Satellite VHR | Open Source | [Project](https://x-ytong.github.io/project/Five-Billion-Pixels.html) · [Paper](https://arxiv.org/abs/2209.00727) |
+| Dataset | Sensor | Resolution | Domain | Category | License |
+|---------|--------|------------|--------|----------|---------|
+| [xView2 (xBD)](https://arxiv.org/abs/1911.09296) | Maxar WorldView-3 (RGB) | 0.3-0.5 m | HADR, building damage, 5 classes | Satellite VHR | CC-BY-NC-SA-4.0 |
+| [Five Billion Pixels](https://arxiv.org/abs/2209.00727) | Gaofen-2 (B/G/R/NIR) | 4 m | Land cover / urban, 24 classes | Satellite VHR | Open Source |
 
 Also includes DynamicEarthNet and SpaceNet 7 (see GEO-Bench-2 above).
 
@@ -104,26 +104,26 @@ Also includes DynamicEarthNet and SpaceNet 7 (see GEO-Bench-2 above).
 
 **Community-Contributed VHR Datasets**
 
-| Dataset | Sensor | Resolution | Domain | Category | License | Resource |
-|---------|--------|------------|--------|----------|---------|----------|
-| [ISPRS Potsdam](https://www.isprs.org/resources/datasets/benchmarks/UrbanSemLab/semantic-labeling.aspx) | Aerial camera (NIR/R/G/B + DSM) | 0.05 m | Urban land cover, 6 classes | Aerial VHR | Free (research) | [ISPRS](https://www.isprs.org/resources/datasets/benchmarks/UrbanSemLab/semantic-labeling.aspx) |
-| [Open-Canopy](https://huggingface.co/datasets/AI4Forest/Open-Canopy) | SPOT 6-7 + aerial LiDAR | 1.5 m | Forestry, canopy height | Satellite VHR | Open License 2.0 | [HuggingFace](https://huggingface.co/datasets/AI4Forest/Open-Canopy) · [Paper](https://arxiv.org/abs/2407.09392) · [GitHub](https://github.com/fajwel/Open-Canopy) |
+| Dataset | Sensor | Resolution | Domain | Category | License |
+|---------|--------|------------|--------|----------|---------|
+| [ISPRS Potsdam](https://www.isprs.org/resources/datasets/benchmarks/UrbanSemLab/semantic-labeling.aspx) | Aerial camera (NIR/R/G/B + DSM) | 0.05 m | Urban land cover, 6 classes | Aerial VHR | Free (research) |
+| [Open-Canopy](https://arxiv.org/abs/2407.09392) | SPOT 6-7 + aerial LiDAR | 1.5 m | Forestry, canopy height | Satellite VHR | Open License 2.0 |
 
 - **ISPRS Potsdam**: 38 tiles (6000x6000 px) covering 3.42 km2 in Potsdam, Germany. 24 annotated, 14 held-out.
-- **Open-Canopy**: ~360 GB, >87,000 km2 of France. Continuous canopy height regression target.
+- **Open-Canopy**: ~360 GB, >87,000 km2 of France. Continuous canopy height regression target. [HuggingFace](https://huggingface.co/datasets/AI4Forest/Open-Canopy)
 
 ### Additional VHR Datasets (Not in GEO-Bench-2 or PanGea core)
 
 From Pierre's GeoFM survey, filtered to GSD <= 10m, publicly licensed. 6 of 15 total surveyed VHR datasets are not included in either PanGea or GEO-Bench-2. ( However their license is not truely opensource )
 
-| Dataset | Sensor | Resolution | Domain | Category | License | Resource |
-|---------|--------|------------|--------|----------|---------|----------|
-| [Vaihingen](https://www.isprs.org/resources/datasets/benchmarks/UrbanSemLab/semantic-labeling.aspx) | Aerial (IR, R, G, DSM) | 0.09 m | Urban, semantic seg., 6 classes | Aerial VHR | Free (research) | [ISPRS](https://www.isprs.org/resources/datasets/benchmarks/UrbanSemLab/semantic-labeling.aspx) |
-| [DOTA V1.0](https://captain-whu.github.io/DOTA/) | Google Earth, GF-2, JL-1 | 0.1-4.5 m | Aerial objects, object detection, 15 classes | Satellite VHR + Aerial VHR | Not specified | [Project](https://captain-whu.github.io/DOTA/) |
-| [LEVIR-CD](https://justchenhao.github.io/LEVIR/) | Google Earth | 0.5 m | Building change, change detection | Satellite VHR | Academic only | [Project](https://justchenhao.github.io/LEVIR/) |
-| [UCMerced](https://vision.ucmerced.edu/datasets/) | USGS aerial RGB | 0.3 m | Land use, classification, 21 classes | Aerial VHR | Public domain | [Dataset](https://vision.ucmerced.edu/datasets/) |
-| [fMoW](https://github.com/fMoW/dataset) | QuickBird, GeoEye, WorldView | 0.5 m | Land use (temporal), classification, 62 classes | Satellite VHR | Custom (fMoW) | [GitHub](https://github.com/fMoW/dataset) |
-| [NWPU-RESISC45](https://arxiv.org/abs/1703.00121) | Google Earth | 0.2-30 m | Scene, classification, 45 classes | Satellite VHR | Not specified | [Paper](https://arxiv.org/abs/1703.00121) |
+| Dataset | Sensor | Resolution | Domain | Category | License |
+|---------|--------|------------|--------|----------|---------|
+| [Vaihingen](https://www.isprs.org/resources/datasets/benchmarks/UrbanSemLab/semantic-labeling.aspx) | Aerial (IR, R, G, DSM) | 0.09 m | Urban, semantic seg., 6 classes | Aerial VHR | Free (research) |
+| [DOTA V1.0](https://captain-whu.github.io/DOTA/) | Google Earth, GF-2, JL-1 | 0.1-4.5 m | Aerial objects, object detection, 15 classes | Satellite VHR + Aerial VHR | Not specified |
+| [LEVIR-CD](https://justchenhao.github.io/LEVIR/) | Google Earth | 0.5 m | Building change, change detection | Satellite VHR | Academic only |
+| [UCMerced](https://vision.ucmerced.edu/datasets/) | USGS aerial RGB | 0.3 m | Land use, classification, 21 classes | Aerial VHR | Public domain |
+| [fMoW](https://github.com/fMoW/dataset) | QuickBird, GeoEye, WorldView | 0.5 m | Land use (temporal), classification, 62 classes | Satellite VHR | Custom (fMoW) |
+| [NWPU-RESISC45](https://arxiv.org/abs/1703.00121) | Google Earth | 0.2-30 m | Scene, classification, 45 classes | Satellite VHR | Not specified |
 
 - **Vaihingen**: Bavarian town, Germany. 33 patches, ISPRS benchmark. Same format as Potsdam.
 - **DOTA V1.0**: 2,806 images, 188,282 annotated instances. Mixed sources (satellite + aerial).
@@ -187,10 +187,10 @@ Models pretrained on natural/web images only (ImageNet, LVD). No aerial or satel
 
 | Model | Backbone | Params | Technique | Pretraining Data | Resolution | Pretrain Samples | VHR Pretraining | License |
 |-------|----------|--------|-----------|------------------|------------|------------------|-----------------|---------|
-| ConvNext-XLarge-ImageNet | ConvNext | 390M | Supervised | ImageNet-22k | NA | 14M | None | Apache 2.0 |
+| [ConvNext-XLarge-ImageNet](https://arxiv.org/abs/2201.03545) | ConvNext | 390M | Supervised | ImageNet-22k | NA | 14M | None | Apache 2.0 |
 | [DINOv3-ConvNext-Large-WEB](https://arxiv.org/abs/2508.10104) | ConvNext | 230M | Distillation | LVD-1689M | NA | 1689M | None | DINO V3 |
-| ConvNext-Large-ImageNet | ConvNext | 230M | Supervised | ImageNet-22k | NA | 14M | None | Apache 2.0 |
-| ResNet50-ImageNet | ResNet-50 | 25M | Supervised | ImageNet-22k | NA | 14M | None | Apache 2.0 |
+| [ConvNext-Large-ImageNet](https://arxiv.org/abs/2201.03545) | ConvNext | 230M | Supervised | ImageNet-22k | NA | 14M | None | Apache 2.0 |
+| [ResNet50-ImageNet](https://arxiv.org/abs/1512.03385) | ResNet-50 | 25M | Supervised | ImageNet-22k | NA | 14M | None | Apache 2.0 |
 
 ### Category 3: GeoFM (Low-Res)
 
