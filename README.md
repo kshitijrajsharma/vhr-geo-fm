@@ -86,8 +86,6 @@ Source: [GEO-Bench-2](https://arxiv.org/pdf/2511.15658)
 - **EverWatch**: 5,125 images, Everglades, Florida.
 - **NZ Cattle**: 655 images, 29,803 annotated cows, New Zealand.
 
-Note: GEO-Bench-2 capability section (Under 10m Resolution) includes SpaceNet2, TreeSatAI, FLAIR2, DynamicEarthNet, SpaceNet7 but excludes EverWatch and NZ Cattle (object detection excluded from capability score).
-
 ### PanGea (PANGAEA) VHR Datasets
 
 Source: [PANGAEA](https://arxiv.org/abs/2412.04204) · [GitHub](https://github.com/VMarsocci/pangaea-bench)
@@ -174,34 +172,25 @@ Models evaluated in GEO-Bench-2, categorized by pretraining data type. Source: [
 
 ### Category 1: Native VHR GeoFM
 
-Models pretrained on VHR imagery (GSD < 10m). These have seen high-resolution imagery during pretraining.
+Models pretrained on VHR imagery (GSD < 10m), including satellite and/or aerial sources.
 
 | Model | Backbone | Params | Technique | Pretraining Data | Resolution | Pretrain Samples | VHR Pretraining | License |
 |-------|----------|--------|-----------|------------------|------------|------------------|-----------------|---------|
-| DINOv3-ViT-L-SAT | ViT | 300M | Distillation | Maxar RGB | 0.6 m | 493M | Satellite VHR (Maxar) | DINO V3 |
-| DOFA-ViT 300M | ViT | 300M | MAE | S1, S2, Gaofen, NAIP, EnMAP | 1-30 m | 8M | Satellite VHR (Gaofen) + Aerial VHR (NAIP) | CC-BY-4.0 |
-| Clay-V1 ViT-B | ViT | 86M | MAE | Landsat 8/9, S1, S2, NAIP, LINZ, MODIS | 1-30 m | 70M | Aerial VHR (NAIP ~1m, LINZ) | Apache 2.0 |
-| Satlas-SwinB-NAIP | Swin | 88M | Supervised | NAIP (USGS) | 1 m | NA | Aerial VHR (NAIP ~1m) | ODC-BY |
-
-- **DINOv3-ViT-L-SAT**: Pretrained on 493M Maxar ortho-rectified satellite RGB tiles at 0.6m. Satellite VHR only. [Paper](https://arxiv.org/abs/2508.10104) · [HuggingFace](https://huggingface.co/facebook/dinov3-vit7b16-pretrain-sat493m)
-- **DOFA**: Dynamic One-For-All. Trained on 5 sensor modalities including Gaofen (4m satellite VHR) and NAIP (~1m aerial VHR). [Paper](https://arxiv.org/abs/2403.15356) · [GitHub](https://github.com/zhu-xlab/DOFA)
-- **Clay-V1**: Open foundation model. Includes NAIP (~1m, US aerial) and LINZ (NZ aerial) in pretraining. No satellite VHR sources. [Docs](https://clay-foundation.github.io/model/) · [GitHub](https://github.com/Clay-foundation/model)
-- **Satlas-NAIP**: SatlasPretrain model trained specifically on NAIP aerial imagery. [Paper](https://arxiv.org/abs/2211.15660) · [GitHub](https://github.com/allenai/satlaspretrain_models)
+| [DINOv3-ViT-L-SAT](https://arxiv.org/abs/2508.10104) | ViT | 300M | Distillation | Maxar RGB | 0.6 m | 493M | Satellite VHR (Maxar) | DINO V3 |
+| [DOFA-ViT 300M](https://arxiv.org/abs/2403.15356) | ViT | 300M | MAE | S1, S2, Gaofen, NAIP, EnMAP | 1-30 m | 8M | Satellite VHR (Gaofen) + Aerial VHR (NAIP) | CC-BY-4.0 |
+| [Clay-V1 ViT-B](https://clay-foundation.github.io/model/) | ViT | 86M | MAE | Landsat 8/9, S1, S2, NAIP, LINZ, MODIS | 1-30 m | 70M | Aerial VHR (NAIP ~1m, LINZ) | Apache 2.0 |
+| [Satlas-SwinB-NAIP](https://arxiv.org/abs/2211.15660) | Swin | 88M | Supervised | NAIP (USGS) | 1 m | NA | Aerial VHR (NAIP ~1m) | ODC-BY |
 
 ### Category 2: General CV FM
 
-Models pretrained on natural / web images only (ImageNet, LVD). No aerial or satellite images in pretraining.
+Models pretrained on natural/web images only (ImageNet, LVD). No aerial or satellite imagery in pretraining.
 
 | Model | Backbone | Params | Technique | Pretraining Data | Resolution | Pretrain Samples | VHR Pretraining | License |
 |-------|----------|--------|-----------|------------------|------------|------------------|-----------------|---------|
 | ConvNext-XLarge-ImageNet | ConvNext | 390M | Supervised | ImageNet-22k | NA | 14M | None | Apache 2.0 |
-| DINOv3-ConvNext-Large-WEB | ConvNext | 230M | Distillation | LVD-1689M | NA | 1689M | None | DINO V3 |
+| [DINOv3-ConvNext-Large-WEB](https://arxiv.org/abs/2508.10104) | ConvNext | 230M | Distillation | LVD-1689M | NA | 1689M | None | DINO V3 |
 | ConvNext-Large-ImageNet | ConvNext | 230M | Supervised | ImageNet-22k | NA | 14M | None | Apache 2.0 |
 | ResNet50-ImageNet | ResNet-50 | 25M | Supervised | ImageNet-22k | NA | 14M | None | Apache 2.0 |
-
-- **ConvNext variants**: Standard ImageNet-pretrained ConvNeXt backbones from timm. No EO data.
-- **DINOv3-ConvNext-Large-WEB**: DINOv3 distillation on LVD-1689M (curated web images). No satellite or aerial imagery. [Paper](https://arxiv.org/abs/2508.10104)
-- **ResNet50-ImageNet**: Standard ResNet-50 supervised on ImageNet-22k.
 
 ### Category 3: GeoFM (Low-Res)
 
@@ -209,18 +198,13 @@ Models pretrained on publicly available low-resolution satellite data (>= 10m), 
 
 | Model | Backbone | Params | Technique | Pretraining Data | Resolution | Pretrain Samples | VHR Pretraining | License |
 |-------|----------|--------|-----------|------------------|------------|------------------|-----------------|---------|
-| TerraMind-V1-Large | ViT | 300M | Correlation | S1, S2, LULC, DEM, NDVI | 10 m | 9M | None | Apache 2.0 |
-| TerraMind-V1-Base | ViT | 86M | Correlation | S1, S2, LULC, DEM, NDVI | 10 m | 9M | None | Apache 2.0 |
-| Prithvi-EO-V2-600M-TL | ViT | 600M | MAE | HLS (Harmonized) | 30 m | 4.2M | None | Apache 2.0 |
-| Prithvi-EO-V2-300M-TL | ViT | 300M | MAE | HLS | 30 m | 4.2M | None | Apache 2.0 |
-| Satlas-SwinB-Sentinel2 | Swin | 88M | Supervised | Sentinel-2 | 10 m | NA | None | ODC-BY |
-| Satlas-Swin-100M | Swin | 100M | Supervised | Sentinel-2 | 10 m | NA | None | ODC-BY |
-| ResNet50-DeCUR | ResNet-50 | 25M | Contrastive | Sentinel-2 | 10 m | 1M | None | Apache 2.0 |
-
-- **TerraMind**: IBM-ESA model. Pretrained on TerraMesh (9M samples from S1/S2/LULC/DEM/NDVI at 10m). [Paper](https://arxiv.org/abs/2504.11171) · [GitHub](https://github.com/IBM/terramind)
-- **Prithvi-EO-V2**: NASA-IBM model. Pretrained on Harmonized Landsat-Sentinel (HLS) at 30m. [GitHub](https://github.com/NASA-IMPACT/Prithvi-EO-2.0)
-- **Satlas-Sentinel2**: SatlasPretrain backbone trained on Sentinel-2 imagery at 10m. [Paper](https://arxiv.org/abs/2211.15660)
-- **ResNet50-DeCUR**: Contrastive self-supervised on Sentinel-2 at 10m. [Paper](https://arxiv.org/abs/2209.11124)
+| [TerraMind-V1-Large](https://arxiv.org/abs/2504.11171) | ViT | 300M | Correlation | S1, S2, LULC, DEM, NDVI | 10 m | 9M | None | Apache 2.0 |
+| [TerraMind-V1-Base](https://arxiv.org/abs/2504.11171) | ViT | 86M | Correlation | S1, S2, LULC, DEM, NDVI | 10 m | 9M | None | Apache 2.0 |
+| [Prithvi-EO-V2-600M-TL](https://github.com/NASA-IMPACT/Prithvi-EO-2.0) | ViT | 600M | MAE | HLS (Harmonized) | 30 m | 4.2M | None | Apache 2.0 |
+| [Prithvi-EO-V2-300M-TL](https://github.com/NASA-IMPACT/Prithvi-EO-2.0) | ViT | 300M | MAE | HLS | 30 m | 4.2M | None | Apache 2.0 |
+| [Satlas-SwinB-Sentinel2](https://arxiv.org/abs/2211.15660) | Swin | 88M | Supervised | Sentinel-2 | 10 m | NA | None | ODC-BY |
+| [Satlas-Swin-100M](https://arxiv.org/abs/2211.15660) | Swin | 100M | Supervised | Sentinel-2 | 10 m | NA | None | ODC-BY |
+| [ResNet50-DeCUR](https://arxiv.org/abs/2209.11124) | ResNet-50 | 25M | Contrastive | Sentinel-2 | 10 m | 1M | None | Apache 2.0 |
 
 ### Scoring Methodology
 
