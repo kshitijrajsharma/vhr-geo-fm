@@ -254,30 +254,19 @@ Categories: **VHR-FM** = pretrained on VHR imagery, **CV-FM** = pretrained on na
 
 ### Model Performance on VHR Datasets: Frozen Encoder
 
-Normalized IQM scores from GEO-Bench-2 with frozen encoder. Object detection datasets not available in frozen mode. Source: [GEO-Bench-2 Leaderboard](https://github.com/The-AI-Alliance/GEO-Bench-2-Leaderboard) with `--frozen` flag.
+Normalized IQM scores from GEO-Bench-2 with frozen encoder. Object detection datasets not available in frozen mode, so scores cover only the same 5 classification/segmentation datasets. The **FT Score** column shows the fine-tuned aggregate on these same 5 datasets (from `geo-bench2-results-vhr-base.csv`) for direct comparison. Source: [GEO-Bench-2 Leaderboard](https://github.com/The-AI-Alliance/GEO-Bench-2-Leaderboard) with `--frozen` flag.
 
-| # | Model | Category | Params | Score | SN2 | TreeSat | FLAIR2 | DynEN | SN7 |
-|---|-------|----------|--------|-------|-----|---------|--------|-------|-----|
-| 1 | DINOv3-ViT-L-SAT | VHR-FM | 300M | 55.4 +/- 0.3 | 44.9 | 1.9 | 58.0 | 71.9 | 81.3 |
-| 2 | DINOv3-ConvNext-WEB | CV-FM | 230M | 46.0 +/- 0.3 | 36.4 | -18.7 | 65.4 | 33.2 | 82.6 |
-| 3 | Clay-V1 ViT-B | VHR-FM | 100M | 38.0 +/- 0.4 | 18.1 | -18.0 | 51.8 | 36.5 | 89.2 |
-| 4 | DOFA-ViT 300M | VHR-FM | 300M | 36.4 +/- 0.3 | 13.9 | -3.0 | 57.7 | 35.2 | 73.3 |
-| 5 | ConvNext-XL-ImgNet | CV-FM | 390M | 35.6 +/- 0.2 | 37.4 | -0.2 | 38.9 | 32.2 | 82.2 |
-| 6 | Prithvi-V2-600M | LowRes-FM | 600M | 15.4 +/- 0.3 | 7.5 | -28.9 | 3.0 | 37.7 | 79.6 |
-| 7 | TerraMind-V1-L | LowRes-FM | 300M | 7.8 +/- 0.1 | -35.0 | -42.4 | -2.6 | 81.5 | 65.0 |
-| 8 | ResNet50-DeCUR | LowRes-FM | 25M | -0.5 +/- 0.2 | -37.8 | -39.8 | -4.1 | 36.8 | 68.1 |
-| 9 | Satlas-ResNet50 | LowRes-FM | 25M | -12.5 +/- 0.3 | -67.1 | -65.2 | -21.0 | 55.6 | 65.5 |
-| 10 | Satlas-Swin 100M | LowRes-FM | 100M | -22.9 +/- 0.3 | -86.2 | -72.5 | -27.7 | 35.7 | 73.1 |
+| # | Model | Category | Params | Frozen | FT Score | SN2 | TreeSat | FLAIR2 | DynEN | SN7 |
+|---|-------|----------|--------|--------|----------|-----|---------|--------|-------|-----|
+| 1 | DINOv3-ViT-L-SAT | VHR-FM | 300M | 55.4 +/- 0.3 | 88.4 | 44.9 | 1.9 | 58.0 | 71.9 | 81.3 |
+| 2 | DINOv3-ConvNext-WEB | CV-FM | 230M | 46.0 +/- 0.3 | 88.3 | 36.4 | -18.7 | 65.4 | 33.2 | 82.6 |
+| 3 | Clay-V1 ViT-B | VHR-FM | 100M | 38.0 +/- 0.4 | 67.4 | 18.1 | -18.0 | 51.8 | 36.5 | 89.2 |
+| 4 | DOFA-ViT 300M | VHR-FM | 300M | 36.4 +/- 0.3 | 73.5 | 13.9 | -3.0 | 57.7 | 35.2 | 73.3 |
+| 5 | ConvNext-XL-ImgNet | CV-FM | 390M | 35.6 +/- 0.2 | 81.1 | 37.4 | -0.2 | 38.9 | 32.2 | 82.2 |
+| 6 | Prithvi-V2-600M | LowRes-FM | 600M | 15.4 +/- 0.3 | 56.0 | 7.5 | -28.9 | 3.0 | 37.7 | 79.6 |
+| 7 | TerraMind-V1-L | LowRes-FM | 300M | 7.8 +/- 0.1 | 63.2 | -35.0 | -42.4 | -2.6 | 81.5 | 65.0 |
+| 8 | ResNet50-DeCUR | LowRes-FM | 25M | -0.5 +/- 0.2 | 31.5 | -37.8 | -39.8 | -4.1 | 36.8 | 68.1 |
+| 9 | Satlas-ResNet50 | LowRes-FM | 25M | -12.5 +/- 0.3 | 44.5 | -67.1 | -65.2 | -21.0 | 55.6 | 65.5 |
+| 10 | Satlas-Swin 100M | LowRes-FM | 100M | -22.9 +/- 0.3 | 48.1 | -86.2 | -72.5 | -27.7 | 35.7 | 73.1 |
 
-**Key observations:** DINOv3-ViT-L-SAT dominates frozen evaluation (55.4), confirming its pretrained features are the most transferable to VHR without adaptation. VHR-FM models occupy 3 of top 4 ranks. ConvNext-XL drops from #1 (fine-tuned) to #5 (frozen), showing its strength relies on adaptation capacity not pretrained feature relevance. LowRes-FM models collapse — Satlas-Swin and Satlas-ResNet50 score deeply negative, meaning Sentinel-pretrained features are unusable for VHR without fine-tuning. TerraMind-V1-L is strong on DynEN (81.5, highest) but catastrophic on SN2 (-35.0) and TreeSat (-42.4), suggesting Sentinel features only transfer to lower-res VHR (3m).
-
-### Frozen vs Fine-tuned: Key Ranking Changes
-
-| Model | FT Rank | Frozen Rank | Shift | Interpretation |
-|-------|---------|-------------|-------|----------------|
-| DINOv3-ViT-L-SAT | 3 | 1 | +2 | Best pretrained VHR features |
-| ConvNext-XL-ImgNet | 1 | 5 | -4 | Strong learner but weak VHR features out-of-the-box |
-| Clay-V1 ViT-B | 6 | 3 | +3 | VHR pretraining (NAIP/LINZ) provides useful frozen features |
-| DOFA-ViT 300M | 5 | 4 | +1 | Multi-sensor VHR pretraining holds up in both modes |
-
-Models pretrained exclusively on Sentinel data substantially underperform on VHR tasks in both modes. Frozen results reveal that VHR pretraining produces genuinely more relevant feature representations, not just better initialization. Large natural-image models (ConvNext-XL) can partially compensate through fine-tuning capacity — a gap that disappears when encoders are frozen.
+**Key observations:** DINOv3-ViT-L-SAT dominates frozen evaluation (55.4), confirming its pretrained features are the most transferable to VHR without adaptation. VHR-FM models occupy 3 of top 4 ranks. ConvNext-XL drops from FT 81.1 to frozen 35.6 (-45.5 pts), the largest absolute drop, showing its strength relies on adaptation capacity not pretrained feature relevance. LowRes-FM models collapse in frozen mode — Satlas-Swin goes from FT 48.1 to frozen -22.9 (-71 pts). TerraMind-V1-L is strong on DynEN (81.5, highest) but catastrophic on SN2 (-35.0) and TreeSat (-42.4), suggesting Sentinel features only transfer to lower-res VHR (3m). Models pretrained exclusively on Sentinel data substantially underperform on VHR tasks in both modes; VHR pretraining produces genuinely more relevant feature representations, not just better initialization.
