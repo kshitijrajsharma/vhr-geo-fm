@@ -2,7 +2,7 @@
 
 ### Research Objective
 
-Investigate whether existing geospatial foundation models (GeoFMs) are sufficient for Very High Resolution (VHR) imagery tasks, or if VHR-specific pretraining is required. The primary focus is on commercial VHR satellite and aerial imagery (GSD < 10m), since many current models rely heavily on public Sentinel images which are considered insufficient for this resolution scope.
+Investigate whether existing geospatial foundation models (GeoFMs) are sufficient for Very High Resolution (VHR) imagery tasks, or if VHR-specific pretraining is required. The primary focus is on commercial VHR satellite and aerial imagery (GSD < 10m), since many current models rely heavily on public Sentinel images Hypothesis is :  they might be insufficient for this resolution scope.
 
 **Key research questions:**
 
@@ -13,7 +13,7 @@ Investigate whether existing geospatial foundation models (GeoFMs) are sufficien
 **Scope decisions:**
 
 - NOT focusing on VHR SAR
-- NOT focusing on temporal VHR
+- NOT focusing on temporal VHR ( As our theme is disaster getting temporal data on VHR might not be feasible )
 - Primary interest: RGB and RGB+NIR combinations at sub-10m resolution
 - Downstream tasks: semantic segmentation, classification, object detection, change detection
 - Benchmarking through GEO-Bench-2 and PanGea (PANGAEA) as standardized evaluation frameworks
