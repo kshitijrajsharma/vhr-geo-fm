@@ -18,13 +18,7 @@ Investigate whether existing geospatial foundation models (GeoFMs) are sufficien
 - Downstream tasks: semantic segmentation, classification, object detection, change detection
 - Benchmarking through GEO-Bench-2 and PanGea (PANGAEA) as standardized evaluation frameworks
 
-**Key early findings (from GEO-Bench-2 analysis):**
-
-- Models trained only on Sentinel-1/2 (e.g., TerraMind, Prithvi) fall 30+ points behind on VHR tasks
-- Models trained on natural images (ConvNext, DINOv3) adapt surprisingly well to VHR and even surpass some native VHR GeoFMs like Clay and DOFA
-- DINOv3-ViT-L-SAT leads because it has seen both satellite and natural images
-- However, natural-image models fail when multispectral information is needed
-- Existing VHR benchmark datasets are biased towards Europe and North America
+**Key early findings:** Sentinel-only models lag significantly on VHR; natural-image models adapt surprisingly well to VHR RGB but fail on multispectral; VHR pretraining matters most when encoders are frozen. See [fine-tuned](#model-performance-on-vhr-datasets-under-10m-resolution--fine-tuned) and [frozen encoder](#model-performance-on-vhr-datasets--frozen-encoder) results for details.
 
 **References:**
 
@@ -66,7 +60,7 @@ Source: [GEO-Bench-2](https://arxiv.org/pdf/2511.15658)
 |---------|--------|------------|--------|----------|---------|----------|
 | [TreeSatAI](https://essd.copernicus.org/articles/15/681/2023/) | S2 TS (benchmark); full archive also has S1 SAR + 0.2m aerial CIR | 10 m (S2) / 0.2 m (aerial) | Forestry, 13 tree species | Satellite + Aerial | CC-BY-4.0 | [Paper](https://essd.copernicus.org/articles/15/681/2023/) · [Zenodo](https://doi.org/10.5281/zenodo.6598390) |
 
-- 50,381 image triplets, Lower Saxony, Germany. Multi-label, 20 species / 15 genera. GEO-Bench-2 uses S2 TS only. CC-BY-4.0.
+- 50,381 image triplets, Lower Saxony, Germany. Multi-label, 20 species / 15 genera. GEO-Bench-2 uses S2 TS only.
 
 **Semantic Segmentation**
 
@@ -77,10 +71,10 @@ Source: [GEO-Bench-2](https://arxiv.org/pdf/2511.15658)
 | [SpaceNet 2](https://registry.opendata.aws/spacenet/) | WorldView-2/3 (8-band pansharpened) | 0.3 m (WV-3) / 0.5 m (WV-2) | Urban, building footprints, 2 classes | Satellite VHR | CC-BY-SA-4.0 | [AWS](https://registry.opendata.aws/spacenet/) · [Paper](https://arxiv.org/abs/1807.01232) |
 | [SpaceNet 7](https://registry.opendata.aws/spacenet/) | Planet Dove (RGB+NIR) | 4 m | Urban, multi-temporal buildings, 2 classes | Satellite VHR | CC-BY-SA-4.0 | [Paper](https://arxiv.org/abs/2102.04420) · [AWS](https://registry.opendata.aws/spacenet/) |
 
-- **DynamicEarthNet**: 75 AOIs, 6 continents, daily imagery (2018-2019), monthly labels. CC-BY-4.0.
-- **FLAIR #2**: 20B+ annotated pixels, metropolitan France, 55 spatial domains. Open Licence 2.0.
-- **SpaceNet 2**: 5 cities (Rio, Las Vegas, Shanghai, Khartoum, Paris). CC-BY-SA-4.0.
-- **SpaceNet 7**: 100+ geographies, 24 monthly time steps, 11M+ building annotations. CC-BY-SA-4.0.
+- **DynamicEarthNet**: 75 AOIs, 6 continents, daily imagery (2018-2019), monthly labels.
+- **FLAIR #2**: 20B+ annotated pixels, metropolitan France, 55 spatial domains.
+- **SpaceNet 2**: 5 cities (Rio, Las Vegas, Shanghai, Khartoum, Paris).
+- **SpaceNet 7**: 100+ geographies, 24 monthly time steps, 11M+ building annotations.
 
 **Object Detection**
 
@@ -89,8 +83,8 @@ Source: [GEO-Bench-2](https://arxiv.org/pdf/2511.15658)
 | [EverWatch](https://zenodo.org/records/10811969) | UAS/drone aerial RGB | 0.1 m | Ecology, wading birds, 9 classes | Aerial VHR (drone) | CC0 | [Zenodo](https://zenodo.org/records/10811969) · [Project](https://everglades.weecology.org/data/uav/) · [GitHub](https://github.com/weecology/everwatch-workflow) |
 | [NZ Cattle](https://zenodo.org/records/5908869) | Aerial RGB (LINZ) | 0.1 m | Agriculture, cattle detection, 2 classes | Aerial VHR | CC-BY-4.0 | [Zenodo](https://zenodo.org/records/5908869) |
 
-- **EverWatch**: 5,125 images, Everglades, Florida. CC0.
-- **NZ Cattle**: 655 images, 29,803 annotated cows, New Zealand. CC-BY-4.0.
+- **EverWatch**: 5,125 images, Everglades, Florida.
+- **NZ Cattle**: 655 images, 29,803 annotated cows, New Zealand.
 
 Note: GEO-Bench-2 capability section (Under 10m Resolution) includes SpaceNet2, TreeSatAI, FLAIR2, DynamicEarthNet, SpaceNet7 but excludes EverWatch and NZ Cattle (object detection excluded from capability score).
 
@@ -104,8 +98,8 @@ Source: [PANGAEA](https://arxiv.org/abs/2412.04204) · [GitHub](https://github.c
 |---------|--------|------------|--------|----------|---------|----------|
 | [xView2 (xBD)](https://xview2.org/dataset) | Maxar WorldView-3 (RGB) | 0.3-0.5 m | HADR, building damage, 5 classes | Satellite VHR | CC-BY-NC-SA-4.0 | [Dataset](https://xview2.org/dataset) · [Paper](https://arxiv.org/abs/1911.09296) |
 | [Five Billion Pixels](https://x-ytong.github.io/project/Five-Billion-Pixels.html) | Gaofen-2 (B/G/R/NIR) | 4 m | Land cover / urban, 24 classes | Satellite VHR | Open Source | [Project](https://x-ytong.github.io/project/Five-Billion-Pixels.html) · [Paper](https://arxiv.org/abs/2209.00727) |
-| [DynamicEarthNet](https://github.com/aysim/dynnet) | Planet PlanetScope (RGB+NIR) | 3 m | LULC change, 7 classes | Satellite VHR | CC-BY-4.0 | [Paper](https://arxiv.org/abs/2203.12560) |
-| [SpaceNet 7](https://registry.opendata.aws/spacenet/) | Planet Dove (RGB+NIR) | 4 m | Urban, building tracking, 2 classes | Satellite VHR | CC-BY-SA-4.0 | [Paper](https://arxiv.org/abs/2102.04420) |
+
+Also includes DynamicEarthNet and SpaceNet 7 (see GEO-Bench-2 above).
 
 - **xView2 (xBD)**: 22,068 images across 15 countries, 6 disaster types, 850,736 building polygons. 1024x1024 px pairs.
 - **Five Billion Pixels**: 150 Gaofen-2 images (6800x7200 px) covering 60+ districts in China, >50,000 km2. Cropped to 520x520 tiles in PanGea.
@@ -139,13 +133,6 @@ From Pierre's GeoFM survey, filtered to GSD <= 10m, publicly licensed. 6 of 15 t
 - **UCMerced**: 2,100 images (256x256), 21 land use classes from USGS National Map. Widely used baseline.
 - **fMoW**: ~1M images, 62 functional categories (airports, hospitals, farms, etc.). ~3.5TB multispectral, ~200GB RGB.
 - **NWPU-RESISC45**: 31,500 images, 45 scene classes, 700 per class. Created by Northwestern Polytechnical University.
-
-### Dataset Overlap Between Benchmarks
-
-| Dataset | GEO-Bench-2 Task | PanGea Task |
-|---------|------------------|-------------|
-| DynamicEarthNet | Semantic Segmentation | Semantic Segmentation |
-| SpaceNet 7 | Semantic Segmentation | Change Detection |
 
 ### Dataset Summary by Category
 
@@ -246,6 +233,7 @@ Performance scores are computed using a patched version of the [GEO-Bench-2 Lead
 3. **Per-dataset scores**: Computed as the interquartile mean (IQM) of the normalized metric across bootstrap samples, with error from trimmed SEM
 4. **Aggregate score**: The "Under 10M Resolution" capability score is a bootstrapped IQM aggregated across all constituent datasets, with error bars from standard error of the mean (SEM)
 5. **Frozen vs fine-tuned**: The script filters submissions by training mode (`--frozen` for frozen backbone, default for full fine-tuning)
+6. **Temporal data handling**: Several VHR datasets are temporal (DynamicEarthNet, SpaceNet7, TreeSatAI). For non-temporal models, each timestamp is encoded separately and outputs are averaged before the decoder. Models with native temporal support (e.g., Prithvi, T=4) process multiple timestamps directly. The paper's ablation found that dropping temporal info caused the largest ranking perturbations among all ablations (GEO-Bench-2 Section 4.3).
 
 **Flags:**
 
