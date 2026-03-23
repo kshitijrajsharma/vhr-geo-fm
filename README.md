@@ -170,7 +170,6 @@ Models pretrained on publicly available low-resolution satellite data (>= 10m), 
 | [Prithvi-EO-V2-300M-TL](https://github.com/NASA-IMPACT/Prithvi-EO-2.0) | ViT | 300M | MAE | HLS | 30 m | 4.2M | None | Apache 2.0 |
 | [Satlas-SwinB-Sentinel2](https://arxiv.org/abs/2211.15660) | Swin | 88M | Supervised | Sentinel-2 | 10 m | NA | None | ODC-BY |
 | [Satlas-Swin-100M](https://arxiv.org/abs/2211.15660) | Swin | 100M | Supervised | Sentinel-2 | 10 m | NA | None | ODC-BY |
-| [ResNet50-DeCUR](https://arxiv.org/abs/2209.11124) | ResNet-50 | 25M | Contrastive | Sentinel-2 | 10 m | 1M | None | Apache 2.0 |
 
 ### Scoring Methodology
 
