@@ -18,7 +18,7 @@ Investigate whether existing geospatial foundation models (GeoFMs) are sufficien
 - Downstream tasks: semantic segmentation, classification, object detection, change detection
 - Benchmarking through GEO-Bench-2 and PanGea (PANGAEA) as standardized evaluation frameworks
 
-**Key early findings:** Sentinel-only models lag significantly on VHR; natural-image models adapt surprisingly well to VHR RGB but fail on multispectral; VHR pretraining matters most when encoders are frozen. See [fine-tuned](#model-performance-on-vhr-datasets-fine-tuned) and [frozen encoder](#model-performance-on-vhr-datasets-frozen-encoder) results for details.
+**Key early findings:** Sentinel-only models lag significantly on VHR; natural-image models adapt surprisingly well to VHR RGB; VHR pretraining matters most when encoders are frozen. See [fine-tuned](#model-performance-on-vhr-datasets-fine-tuned) and [frozen encoder](#model-performance-on-vhr-datasets-frozen-encoder) results for details.
 
 **References:**
 
