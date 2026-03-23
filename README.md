@@ -132,40 +132,6 @@ From Pierre's GeoFM survey, filtered to GSD <= 10m, publicly licensed. 6 of 15 t
 - **fMoW**: ~1M images, 62 functional categories (airports, hospitals, farms, etc.). ~3.5TB multispectral, ~200GB RGB.
 - **NWPU-RESISC45**: 31,500 images, 45 scene classes, 700 per class. Created by Northwestern Polytechnical University.
 
-### Dataset Summary by Category
-
-**Satellite VHR** (commercial satellite sensors, GSD < 10m)
-
-| Dataset | Sensor | Resolution | License | Benchmark |
-|---------|--------|------------|---------|-----------|
-| SpaceNet 2 | WorldView-2/3 | 0.3-0.5 m | CC-BY-SA-4.0 | GEO-Bench-2 |
-| xView2 (xBD) | Maxar WorldView-3 | 0.3-0.5 m | CC-BY-NC-SA-4.0 | PanGea |
-| fMoW | QuickBird, GeoEye, WV | 0.5 m | Custom (fMoW) | Additional |
-| LEVIR-CD | Google Earth | 0.5 m | Academic only | Additional |
-| Open-Canopy | SPOT 6-7 | 1.5 m | Open License 2.0 | PanGea (community) |
-| DynamicEarthNet | Planet PlanetScope | 3 m | CC-BY-4.0 | GEO-Bench-2, PanGea |
-| SpaceNet 7 | Planet Dove | 4 m | CC-BY-SA-4.0 | GEO-Bench-2, PanGea |
-| Five Billion Pixels | Gaofen-2 | 4 m | Open Source | PanGea |
-| NWPU-RESISC45 | Google Earth | 0.2-30 m | Not specified | Additional |
-
-**Aerial VHR** (airborne / drone sensors)
-
-| Dataset | Sensor | Resolution | License | Benchmark |
-|---------|--------|------------|---------|-----------|
-| ISPRS Potsdam | Aerial camera (NIRGB+DSM) | 0.05 m | Free (research) | PanGea (community) |
-| Vaihingen | Aerial (IR, R, G, DSM) | 0.09 m | Free (research) | Additional |
-| EverWatch | UAS/drone RGB | 0.1 m | CC0 | GEO-Bench-2 |
-| NZ Cattle | Aerial RGB (LINZ) | 0.1 m | CC-BY-4.0 | GEO-Bench-2 |
-| FLAIR #2 | Aerial RGBN + S2 (aux) | 0.2 m | Open License 2.0 | GEO-Bench-2 |
-| UCMerced | USGS aerial RGB | 0.3 m | Public domain | Additional |
-
-**Mixed (Satellite + Aerial)**
-
-| Dataset | Sensor | Resolution | License | Benchmark |
-|---------|--------|------------|---------|-----------|
-| TreeSatAI | Sentinel-1/2 + aerial CIR | 10 m (S2) / 0.2 m (aerial) | CC-BY-4.0 | GEO-Bench-2 |
-| DOTA V1.0 | Google Earth + GF-2 + JL-1 | 0.1-4.5 m | Not specified | Additional |
-
 ## Models
 
 Models evaluated in GEO-Bench-2, categorized by pretraining data type. Source: [GEO-Bench-2 Table 4](https://arxiv.org/pdf/2511.15658)
