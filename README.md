@@ -44,7 +44,7 @@ Investigate whether existing geospatial foundation models (GeoFMs) are sufficien
 | Gaofen-2 | [CNSA](https://earth.esa.int/eogateway/missions/gaofen-2) | 0.81 m | 3.24 m | 4 (RGB+NIR) | Chinese civilian VHR |
 | PlanetScope (Dove) | [Planet](https://docs.planet.com/data/imagery/planetscope/) | N/A | 3-5 m | 4-8 bands | Daily global coverage |
 
-Satellite VHR images cover large areas but may have atmospheric distortion, off-nadir angles, and varying revisit depending on constellation. Upcoming: Pleiades Neo Next (~20cm class), Planet Pelican.
+Satellite VHR images cover large areas but may have atmospheric distortion, off-nadir angles, and varying revisit depending on constellation. 
 
 **Aerial VHR**: Imagery acquired from airborne platforms (manned aircraft, drones/UAS) at very fine resolution, typically sub-1m. Examples: NAIP (~1m, US national coverage), LINZ (New Zealand aerial surveys), IGN aerial campaigns (0.2m, France), drone/UAS imagery (0.1m or finer). These images are captured under controlled conditions (ideal weather, nadir view) and typically offer only RGB or RGB+NIR bands with limited spectral diversity compared to satellite sensors.
 
@@ -88,6 +88,8 @@ Source: [GEO-Bench-2](https://arxiv.org/pdf/2511.15658)
 
 ### PanGea (PANGAEA) VHR Datasets
 
+Not used in the experiments yet but listing them out : 
+
 Source: [PANGAEA](https://arxiv.org/abs/2412.04204) · [GitHub](https://github.com/VMarsocci/pangaea-bench)
 
 **Core VHR Datasets (< 10 m)**
@@ -114,6 +116,8 @@ Also includes DynamicEarthNet and SpaceNet 7 (see GEO-Bench-2 above).
 
 ### Additional VHR Datasets (Not in GEO-Bench-2 or PanGea core)
 
+( Not used here but listing them ) 
+
 From Pierre's GeoFM survey, filtered to GSD <= 10m, publicly licensed. 6 of 15 total surveyed VHR datasets are not included in either PanGea or GEO-Bench-2. ( However their license is not truely opensource )
 
 | Dataset | Sensor | Resolution | Domain | Category | License |
@@ -124,13 +128,6 @@ From Pierre's GeoFM survey, filtered to GSD <= 10m, publicly licensed. 6 of 15 t
 | [UCMerced](https://vision.ucmerced.edu/datasets/) | USGS aerial RGB | 0.3 m | Land use, classification, 21 classes | Aerial VHR | Public domain |
 | [fMoW](https://github.com/fMoW/dataset) | QuickBird, GeoEye, WorldView | 0.5 m | Land use (temporal), classification, 62 classes | Satellite VHR | Custom (fMoW) |
 | [NWPU-RESISC45](https://arxiv.org/abs/1703.00121) | Google Earth | 0.2-30 m | Scene, classification, 45 classes | Satellite VHR | Not specified |
-
-- **Vaihingen**: Bavarian town, Germany. 33 patches, ISPRS benchmark. Same format as Potsdam.
-- **DOTA V1.0**: 2,806 images, 188,282 annotated instances. Mixed sources (satellite + aerial).
-- **LEVIR-CD**: 637 bi-temporal image pairs from Texas cities, 31,333 building change instances. Academic use only.
-- **UCMerced**: 2,100 images (256x256), 21 land use classes from USGS National Map. Widely used baseline.
-- **fMoW**: ~1M images, 62 functional categories (airports, hospitals, farms, etc.). ~3.5TB multispectral, ~200GB RGB.
-- **NWPU-RESISC45**: 31,500 images, 45 scene classes, 700 per class. Created by Northwestern Polytechnical University.
 
 ## Models
 
