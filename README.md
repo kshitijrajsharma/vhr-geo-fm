@@ -88,9 +88,8 @@ Source: [GEO-Bench-2](https://arxiv.org/pdf/2511.15658)
 
 ### PanGea (PANGAEA) VHR Datasets
 
-::: warning
-Not used in the experiments yet but listing them out 
-:::
+>[!NOTE]  
+>Not used in the experiments yet but listing them out 
 
 Source: [PANGAEA](https://arxiv.org/abs/2412.04204) · [GitHub](https://github.com/VMarsocci/pangaea-bench)
 
@@ -118,9 +117,8 @@ Also includes DynamicEarthNet and SpaceNet 7 (see GEO-Bench-2 above).
 
 ### Additional VHR Datasets (Not in GEO-Bench-2 or PanGea core)
 
-::: warning
-Not used in the experiments yet but listing them out 
-:::
+>[!NOTE]  
+>Not used in the experiments yet but listing them out 
 
 From Pierre's GeoFM survey, filtered to GSD <= 10m, publicly licensed. 6 of 15 total surveyed VHR datasets are not included in either PanGea or GEO-Bench-2. ( However their license is not truely opensource )
 
