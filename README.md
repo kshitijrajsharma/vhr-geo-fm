@@ -189,7 +189,7 @@ Performance scores are computed using a patched version of the [GEO-Bench-2 Lead
 - `--frozen`: Evaluates frozen backbone submissions instead of fully fine-tuned (object detection results are not available in frozen mode)
 - `--out <path>`: Exports results as CSV
 
-Results were accessed & generated on 2026-03-15 (fine-tuned) and 2026-03-20 (frozen). Raw data: [data/](data/)
+Results were accessed & generated on 2026-03-15 (fine-tuned) and 2026-03-20 (frozen). THOR-V1-Base frozen results added 2026-03-24. Raw data: [data/](data/)
 
 ### Model Performance on VHR Datasets: Fine-tuned
 
@@ -240,6 +240,7 @@ Source: [GEO-Bench-2 Leaderboard](https://github.com/The-AI-Alliance/GEO-Bench-2
 | 8  | ResNet50-DeCUR       | LowRes-FM | 25M    | -0.5 +/- 0.2  | 31.5     | -37.8 | -39.8   | -4.1   | 36.8  | 68.1 |
 | 9  | Satlas-ResNet50      | LowRes-FM | 25M    | -12.5 +/- 0.3 | 44.5     | -67.1 | -65.2   | -21.0  | 55.6  | 65.5 |
 | 10 | Satlas-Swin 100M     | LowRes-FM | 100M   | -22.9 +/- 0.3 | 48.1     | -86.2 | -72.5   | -27.7  | 35.7  | 73.1 |
+| 11 | THOR-V1-Base         | LowRes-FM | 86M    | -32.4 +/- 0.1 | -        | -103.6| -291.7  | -31.9  | 70.3  | 38.1 |
 
 **Key observations:**
 
