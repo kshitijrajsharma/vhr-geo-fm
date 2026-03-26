@@ -42,6 +42,7 @@ def map_model_category(model_name: str) -> str:
         "Prithvi-EO-V1-100",
         "TerraMind-V1-Base",
         "TerraMind-V1-Large",
+        "THOR-V1-Base",
     }
 
     if model_name in vhr_aerial:

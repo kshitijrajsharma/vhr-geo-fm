@@ -1,0 +1,67 @@
+{
+  "categories": {
+    "VHR-FM": {
+      "description": "Pretrained on VHR imagery (GSD < 10m)",
+      "models": {
+        "dinov3_vitl16": {
+          "display_name": "DINOv3-ViT-L-SAT",
+          "params": "300M"
+        },
+        "dofa_large_patch16_224": {
+          "display_name": "DOFA-ViT 300M",
+          "params": "300M"
+        },
+        "clay_v1_base": {
+          "display_name": "Clay-V1 ViT-B",
+          "params": "100M"
+        },
+        "satlas_swin_b_naip_si_rgb": {
+          "display_name": "Satlas-SwinB-NAIP",
+          "params": "100M"
+        }
+      }
+    },
+    "CV-FM": {
+      "description": "Pretrained on natural/web images only",
+      "models": {
+        "convnext_xlarge_fb_in22k": {
+          "display_name": "ConvNext-XL-ImgNet",
+          "params": "390M"
+        },
+        "dinov3_convnext_large": {
+          "display_name": "DINOv3-ConvNext-WEB",
+          "params": "230M"
+        },
+        "resnet50": {
+          "display_name": "ResNet50-ImgNet",
+          "params": "25M"
+        }
+      }
+    },
+    "LowRes-FM": {
+      "description": "Pretrained on Sentinel (>= 10m) only",
+      "models": {
+        "terramind_v1_large": {
+          "display_name": "TerraMind-V1-L",
+          "params": "300M"
+        },
+        "prithvi_eo_v2_600_tl": {
+          "display_name": "Prithvi-V2-600M",
+          "params": "600M"
+        },
+        "satlas_swin_b_sentinel2_si_ms": {
+          "display_name": "Satlas-Swin 100M",
+          "params": "100M"
+        },
+        "ssl4eos12_resnet50_sentinel2_all_decur": {
+          "display_name": "ResNet50-DeCUR",
+          "params": "25M"
+        },
+        "thor_v1_base": {
+          "display_name": "THOR-V1-Base",
+          "params": "86M"
+        }
+      }
+    }
+  }
+}

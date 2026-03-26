@@ -1,0 +1,45 @@
+data:
+  root: ${oc.env:VHR_DATA_ROOT,./data}
+  datasets:
+    - spacenet2
+    - spacenet7
+    - flair2
+    - dynamic_earthnet
+    - treesatai
+    - everwatch
+    - nzcattle
+  data_pct: 100
+
+model:
+  backbone: resnet50
+  pretrained: true
+
+training:
+  mode: frozen  # frozen | finetune
+  max_epochs: 50
+  early_stop_patience: 10
+  weight_decay: 0.01
+  optimizer: AdamW
+  scheduler: ReduceLROnPlateau
+  precision: "16-mixed"
+
+hpo:
+  n_trials: 16
+  lr_min: 1e-6
+  lr_max: 1e-3
+  batch_sizes:
+    - 8
+    - 16
+    - 32
+
+eval:
+  seeds:
+    - 205
+    - 913
+    - 1829
+    - 2007
+    - 2254
+  n_bootstrap: 100
+
+output:
+  dir: ./results/${model.backbone}/${training.mode}/${data.data_pct}pct
