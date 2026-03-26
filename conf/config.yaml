@@ -11,17 +11,25 @@ data:
   data_pct: 100
 
 model:
-  backbone: resnet50
+  backbone: timm_resnet50
   pretrained: true
 
 training:
-  mode: frozen  # frozen | finetune
+  mode: frozen # frozen | finetune
   max_epochs: 50
   early_stop_patience: 10
   weight_decay: 0.01
   optimizer: AdamW
   scheduler: ReduceLROnPlateau
   precision: "16-mixed"
+
+performance:
+  num_workers: -1
+  pin_memory: true
+  persistent_workers: true
+  prefetch_factor: 2
+  matmul_precision: high
+  cudnn_benchmark: true
 
 hpo:
   n_trials: 16

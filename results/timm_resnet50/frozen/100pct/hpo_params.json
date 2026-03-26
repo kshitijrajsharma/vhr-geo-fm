@@ -1,0 +1,7 @@
+{
+  "spacenet2": {
+    "lr": 1.329291894316217e-05,
+    "batch_size": 8,
+    "weight_decay": 0.01
+  }
+}

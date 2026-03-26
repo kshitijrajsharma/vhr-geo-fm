@@ -3,63 +3,70 @@
     "VHR-FM": {
       "description": "Pretrained on VHR imagery (GSD < 10m)",
       "models": {
-        "dinov3_vitl16": {
+        "terratorch_dinov3_vitl16": {
           "display_name": "DINOv3-ViT-L-SAT",
-          "params": "300M"
+          "params": "300M",
+          "leaderboard_key": "dinov3_vitl16"
         },
-        "dofa_large_patch16_224": {
+        "terratorch_dofa_large_patch16_224": {
           "display_name": "DOFA-ViT 300M",
-          "params": "300M"
+          "params": "300M",
+          "leaderboard_key": "dofa_large_patch16_224"
         },
-        "clay_v1_base": {
+        "timm_clay_v1_base": {
           "display_name": "Clay-V1 ViT-B",
-          "params": "100M"
+          "params": "100M",
+          "leaderboard_key": "clay_v1_base"
         },
-        "satlas_swin_b_naip_si_rgb": {
+        "terratorch_satlas_swin_b_naip_si_rgb": {
           "display_name": "Satlas-SwinB-NAIP",
-          "params": "100M"
+          "params": "100M",
+          "leaderboard_key": "satlas_swin_b_naip_si_rgb"
         }
       }
     },
     "CV-FM": {
       "description": "Pretrained on natural/web images only",
       "models": {
-        "convnext_xlarge_fb_in22k": {
+        "timm_convnext_xlarge": {
           "display_name": "ConvNext-XL-ImgNet",
-          "params": "390M"
+          "params": "390M",
+          "leaderboard_key": "convnext_xlarge_fb_in22k"
         },
-        "dinov3_convnext_large": {
+        "terratorch_dinov3_convnext_large": {
           "display_name": "DINOv3-ConvNext-WEB",
-          "params": "230M"
+          "params": "230M",
+          "leaderboard_key": "dinov3_convnext_large"
         },
-        "resnet50": {
+        "timm_resnet50": {
           "display_name": "ResNet50-ImgNet",
-          "params": "25M"
+          "params": "25M",
+          "leaderboard_key": "resnet50"
         }
       }
     },
     "LowRes-FM": {
       "description": "Pretrained on Sentinel (>= 10m) only",
       "models": {
-        "terramind_v1_large": {
+        "terratorch_terramind_v1_large": {
           "display_name": "TerraMind-V1-L",
-          "params": "300M"
+          "params": "300M",
+          "leaderboard_key": "terramind_v1_large"
         },
-        "prithvi_eo_v2_600_tl": {
+        "terratorch_prithvi_eo_v2_600_tl": {
           "display_name": "Prithvi-V2-600M",
-          "params": "600M"
+          "params": "600M",
+          "leaderboard_key": "prithvi_eo_v2_600_tl"
         },
-        "satlas_swin_b_sentinel2_si_ms": {
+        "terratorch_satlas_swin_b_sentinel2_si_ms": {
           "display_name": "Satlas-Swin 100M",
-          "params": "100M"
+          "params": "100M",
+          "leaderboard_key": "satlas_swin_b_sentinel2_si_ms"
         },
-        "ssl4eos12_resnet50_sentinel2_all_decur": {
+        "terratorch_ssl4eos12_resnet50_sentinel2_all_decur": {
           "display_name": "ResNet50-DeCUR",
-          "params": "25M"
-        },
-        "thor_v1_base": {
-          "display_name": "THOR-V1-Base",
-          "params": "86M"
+          "params": "25M",
+          "leaderboard_key": "ssl4eos12_resnet50_sentinel2_all_decur"
         }
       }
     }
