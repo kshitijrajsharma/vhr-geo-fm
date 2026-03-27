@@ -12,6 +12,7 @@ from geobench_v2.datamodules.nzcattle import GeoBenchNZCattleDataModule
 from geobench_v2.datamodules.spacenet2 import GeoBenchSpaceNet2DataModule
 from geobench_v2.datamodules.spacenet7 import GeoBenchSpaceNet7DataModule
 from geobench_v2.datamodules.treesatai import GeoBenchTreeSatAIDataModule
+from lightning.pytorch import LightningDataModule
 
 
 @dataclass
@@ -133,7 +134,7 @@ def create_datamodule(
     data_root: str,
     num_workers: int = 4,
     pin_memory: bool = True,
-):
+) -> LightningDataModule:
     """Create a GEO-Bench-2 datamodule from config."""
     kwargs: dict[str, Any] = {
         "img_size": config.img_size,

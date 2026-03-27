@@ -1,6 +1,6 @@
 [project]
 name = "vhr-geo-fm"
-version = "0.1.0"
+version = "0.0.1"
 description = "VHR Foundation Model evaluation via GEO-Bench-2"
 readme = "README.md"
 requires-python = ">=3.11"
@@ -20,6 +20,7 @@ dependencies = [
 [dependency-groups]
 dev = [
     "ruff>=0.14",
+    "ty>=0.0.26",
 ]
 
 [tool.ruff]
@@ -28,6 +29,9 @@ line-length = 100
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "W"]
+
+[tool.ty.src]
+exclude = ["scripts/patch_geo_bench.py"]
 
 [tool.hatch.build.targets.wheel]
 packages = ["eval"]

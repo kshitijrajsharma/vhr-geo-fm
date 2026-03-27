@@ -1,0 +1,2 @@
+dataset,Metric,test metric,Seed,batch_size,lr,decoder,backbone,early_stop_patience,n_trials,partition_name,data_percentages,batch_size_selection,weight_decay,partition name,frozen_or_full_ft,experiment_name,mlflow_run_name,mlflow_run_id,mlflow_run_status,experiment_id,index
+spacenet2,Multiclass_Jaccard_Index,0.5217019319534302,42,8,1.329291894316217e-05,UNet,timm_resnet50,10,1,default,100,HPO,0.01,100%,frozen,timm_resnet50_spacenet2,spacenet2_42,N/A,FINISHED,N/A,0

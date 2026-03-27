@@ -11,21 +11,25 @@ from __future__ import annotations
 import json
 import logging
 import os
+import platform
 import shutil
+import socket
 import tempfile
+import time
 import warnings
+from datetime import UTC, datetime
 from pathlib import Path
 
 import hydra
 import lightning.pytorch as pl
 import optuna
 import torch
-from lightning.pytorch.callbacks import EarlyStopping, ModelCheckpoint
+from lightning.pytorch.callbacks import Callback, EarlyStopping, ModelCheckpoint
 from omegaconf import DictConfig
 
 from eval.datasets import DATASET_CONFIGS, create_datamodule
 from eval.models import create_task
-from eval.scoring import compute_scores, export_csv, export_model_info, print_table
+from eval.scoring import compute_scores, export_csv, print_table
 from eval.subsample import SubsampledDataModule
 
 warnings.filterwarnings("ignore")
@@ -35,6 +39,44 @@ optuna.logging.set_verbosity(optuna.logging.WARNING)
 log = logging.getLogger(__name__)
 
 
+def _collect_system_metadata() -> dict:
+    """Collect host and accelerator metadata for experiment traceability."""
+    data: dict = {
+        "hostname": socket.gethostname(),
+        "platform": platform.platform(),
+        "python_version": platform.python_version(),
+        "torch_version": torch.__version__,
+        "lightning_version": pl.__version__,
+        "cuda_available": torch.cuda.is_available(),
+        "cpu_cores": os.cpu_count() or 0,
+    }
+
+    if torch.cuda.is_available():
+        props = torch.cuda.get_device_properties(0)
+        free_bytes, total_bytes = torch.cuda.mem_get_info(0)
+        data.update(
+            {
+                "gpu_count": torch.cuda.device_count(),
+                "gpu_name": torch.cuda.get_device_name(0),
+                "gpu_total_memory_gb": round(total_bytes / (1024**3), 2),
+                "gpu_free_memory_gb_at_start": round(free_bytes / (1024**3), 2),
+                "gpu_compute_capability": f"{props.major}.{props.minor}",
+            }
+        )
+    else:
+        data.update(
+            {
+                "gpu_count": 0,
+                "gpu_name": None,
+                "gpu_total_memory_gb": None,
+                "gpu_free_memory_gb_at_start": None,
+                "gpu_compute_capability": None,
+            }
+        )
+
+    return data
+
+
 def _train_and_eval(
     cfg: DictConfig,
     dataset_name: str,
@@ -42,8 +84,8 @@ def _train_and_eval(
     batch_size: int,
     seed: int,
     trial: optuna.Trial | None = None,
-) -> tuple[float, float]:
-    """Train and evaluate a single run. Returns (val_metric, test_metric)."""
+) -> tuple[float, float, float]:
+    """Train and evaluate a single run. Returns (val_metric, test_metric, run_seconds)."""
     config = DATASET_CONFIGS[dataset_name]
     pl.seed_everything(seed, workers=True)
 
@@ -74,7 +116,7 @@ def _train_and_eval(
     )
 
     ckpt_dir = tempfile.mkdtemp(prefix=f"vhr_{dataset_name}_")
-    callbacks = [
+    callbacks: list[Callback] = [
         EarlyStopping(
             monitor=config.metric_key,
             patience=cfg.training.early_stop_patience,
@@ -108,6 +150,7 @@ def _train_and_eval(
         deterministic=False,
     )
 
+    run_start = time.perf_counter()
     trainer.fit(task, datamodule=dm)
 
     best_val = trainer.callback_metrics.get(config.metric_key)
@@ -119,9 +162,10 @@ def _train_and_eval(
 
     test_key = config.metric_key.replace("val/", "test/").replace("val_", "test_")
     test_metric = test_results[0].get(test_key, 0.0) if test_results else 0.0
+    run_seconds = time.perf_counter() - run_start
 
     shutil.rmtree(ckpt_dir, ignore_errors=True)
-    return best_val, test_metric
+    return best_val, test_metric, run_seconds
 
 
 def _run_hpo(cfg: DictConfig, dataset_name: str) -> dict:
@@ -137,7 +181,9 @@ def _run_hpo(cfg: DictConfig, dataset_name: str) -> dict:
         lr = trial.suggest_float("lr", cfg.hpo.lr_min, cfg.hpo.lr_max, log=True)
         batch_size = trial.suggest_categorical("batch_size", list(cfg.hpo.batch_sizes))
         try:
-            val_metric, _ = _train_and_eval(cfg, dataset_name, lr, batch_size, seed=42, trial=trial)
+            val_metric, _, _ = _train_and_eval(
+                cfg, dataset_name, lr, batch_size, seed=42, trial=trial
+            )
             return val_metric
         except Exception as e:
             log.warning("Trial failed: %s", e)
@@ -166,14 +212,14 @@ def _run_seeds(cfg: DictConfig, dataset_name: str, best_params: dict) -> list[di
     for seed in seeds:
         print(f"  Seed {seed}...", end=" ", flush=True)
         try:
-            _, test_metric = _train_and_eval(
+            _, test_metric, run_seconds = _train_and_eval(
                 cfg,
                 dataset_name,
                 lr=best_params["lr"],
                 batch_size=best_params["batch_size"],
                 seed=seed,
             )
-            print(f"test={test_metric:.6f}")
+            print(f"test={test_metric:.6f} ({run_seconds:.1f}s)")
             decoder = (
                 "UNet"
                 if config.task_type == "segmentation"
@@ -192,6 +238,7 @@ def _run_seeds(cfg: DictConfig, dataset_name: str, best_params: dict) -> list[di
                     "n_trials": cfg.hpo.n_trials,
                     "weight_decay": best_params["weight_decay"],
                     "data_pct": cfg.data.data_pct,
+                    "run_seconds": run_seconds,
                 }
             )
         except Exception as e:
@@ -206,6 +253,10 @@ def main(cfg: DictConfig) -> None:
     # Hydra changes CWD; resolve paths relative to original working dir
     orig_cwd = hydra.utils.get_original_cwd()
     os.chdir(orig_cwd)
+
+    run_start_perf = time.perf_counter()
+    run_started_at = datetime.now(UTC)
+    system_metadata = _collect_system_metadata()
 
     print("GEO-Bench-2 VHR Evaluation")
     print(f"  Backbone: {cfg.model.backbone}")
@@ -271,14 +322,26 @@ def main(cfg: DictConfig) -> None:
     evaluated_datasets = [d for d in dataset_names if d in df["dataset"].unique().tolist()]
     print_table(df, evaluated_datasets)
 
-    output_dir = Path(cfg.output.dir)
-    export_csv(df, output_dir, cfg.model.backbone, frozen)
+    run_ended_at = datetime.now(UTC)
+    run_metadata = {
+        "started_at_utc": run_started_at.isoformat(),
+        "ended_at_utc": run_ended_at.isoformat(),
+        "total_run_seconds": round(time.perf_counter() - run_start_perf, 2),
+        "hostname": system_metadata["hostname"],
+        "platform": system_metadata["platform"],
+        "python_version": system_metadata["python_version"],
+        "torch_version": system_metadata["torch_version"],
+        "lightning_version": system_metadata["lightning_version"],
+        "cpu_cores": system_metadata["cpu_cores"],
+        "gpu_name": system_metadata["gpu_name"],
+        "gpu_count": system_metadata["gpu_count"],
+        "gpu_total_memory_gb": system_metadata["gpu_total_memory_gb"],
+        "gpu_free_memory_gb_at_start": system_metadata["gpu_free_memory_gb_at_start"],
+        "gpu_compute_capability": system_metadata["gpu_compute_capability"],
+    }
 
-    model_registry_path = Path("models.json")
-    if model_registry_path.exists():
-        with open(model_registry_path) as f:
-            model_registry = json.load(f)
-        export_model_info(output_dir, cfg.model.backbone, model_registry)
+    output_dir = Path(cfg.output.dir)
+    export_csv(df, output_dir, cfg.model.backbone, frozen, run_metadata=run_metadata)
 
     # Save HPO params
     output_dir.mkdir(parents=True, exist_ok=True)

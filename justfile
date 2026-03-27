@@ -8,14 +8,11 @@ setup:
 run *ARGS:
     uv run python -m eval.run {{ARGS}}
 
-# Fix all formatting and lint issues
+# Fix all formatting , lint & type issues
 lint:
     uv run ruff check --fix .
     uv run ruff format .
-
-# Type check
-typecheck:
-    uv run ty check eval/
+    uv run ty check .
 
 # Download all 7 VHR datasets
 download:

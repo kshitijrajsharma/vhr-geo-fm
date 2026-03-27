@@ -11,6 +11,6 @@ wheels/
 *.pdf
 thor-eval
 *.log
-*.csv
+# *.csv
 
 outputs

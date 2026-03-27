@@ -1,0 +1,6 @@
+dataset,Metric,test metric,Seed,batch_size,lr,decoder,backbone,early_stop_patience,n_trials,partition_name,data_percentages,batch_size_selection,weight_decay,partition name,frozen_or_full_ft,experiment_name,mlflow_run_name,mlflow_run_id,mlflow_run_status,experiment_id,index
+spacenet2,Multiclass_Jaccard_Index,0.8760876655578613,205,8,0.0006845570267272912,UNet,timm_resnet50,10,16,default,100,HPO,0.01,100%,full_ft,timm_resnet50_spacenet2,spacenet2_205,N/A,FINISHED,N/A,0
+spacenet2,Multiclass_Jaccard_Index,0.8757742643356323,913,8,0.0006845570267272912,UNet,timm_resnet50,10,16,default,100,HPO,0.01,100%,full_ft,timm_resnet50_spacenet2,spacenet2_913,N/A,FINISHED,N/A,0
+spacenet2,Multiclass_Jaccard_Index,0.8747730255126953,1829,8,0.0006845570267272912,UNet,timm_resnet50,10,16,default,100,HPO,0.01,100%,full_ft,timm_resnet50_spacenet2,spacenet2_1829,N/A,FINISHED,N/A,0
+spacenet2,Multiclass_Jaccard_Index,0.8724250793457031,2007,8,0.0006845570267272912,UNet,timm_resnet50,10,16,default,100,HPO,0.01,100%,full_ft,timm_resnet50_spacenet2,spacenet2_2007,N/A,FINISHED,N/A,0
+spacenet2,Multiclass_Jaccard_Index,0.8743984699249268,2254,8,0.0006845570267272912,UNet,timm_resnet50,10,16,default,100,HPO,0.01,100%,full_ft,timm_resnet50_spacenet2,spacenet2_2254,N/A,FINISHED,N/A,0

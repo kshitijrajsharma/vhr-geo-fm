@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import json
 from pathlib import Path
 
 import numpy as np
@@ -89,75 +88,55 @@ def export_csv(
     output_path: Path,
     backbone: str,
     frozen: bool,
+    run_metadata: dict | None = None,
 ) -> None:
-    """Export results in GEO-Bench-2 leaderboard CSV format."""
+    """Export concise, comparable experiment results."""
+    mode = "frozen" if frozen else "full_ft"
     rows = []
     for _, row in df.iterrows():
-        rows.append(
-            {
-                "dataset": row["dataset"],
-                "Metric": row["metric_leaderboard"],
-                "test metric": row["test_metric"],
-                "Seed": row["seed"],
-                "batch_size": row["batch_size"],
-                "lr": row["lr"],
-                "decoder": row["decoder"],
-                "backbone": backbone,
-                "early_stop_patience": row["early_stop_patience"],
-                "n_trials": row["n_trials"],
-                "partition_name": "default",
-                "data_percentages": row["data_pct"],
-                "batch_size_selection": "HPO",
-                "weight_decay": row["weight_decay"],
-                "partition name": f"{row['data_pct']}%",
-                "frozen_or_full_ft": "frozen" if frozen else "full_ft",
-                "experiment_name": f"{backbone}_{row['dataset']}",
-                "mlflow_run_name": f"{row['dataset']}_{row['seed']}",
-                "mlflow_run_id": "N/A",
-                "mlflow_run_status": "FINISHED",
-                "experiment_id": "N/A",
-                "index": 0,
-            }
-        )
+        row_data = {
+            "dataset": row["dataset"],
+            "metric": row["metric_leaderboard"],
+            "test_metric": row["test_metric"],
+            "normalized": row["normalized"],
+            "seed": row["seed"],
+            "backbone": backbone,
+            "mode": mode,
+            "decoder": row["decoder"],
+            "batch_size": row["batch_size"],
+            "lr": row["lr"],
+            "weight_decay": row["weight_decay"],
+            "hpo_trials": row["n_trials"],
+            "early_stop_patience": row["early_stop_patience"],
+            "data_pct": row["data_pct"],
+            "run_seconds": row.get("run_seconds", None),
+        }
+
+        if run_metadata is not None:
+            row_data.update(
+                {
+                    "run_started_at_utc": run_metadata.get("started_at_utc"),
+                    "run_ended_at_utc": run_metadata.get("ended_at_utc"),
+                    "total_run_seconds": run_metadata.get("total_run_seconds"),
+                    "hostname": run_metadata.get("hostname"),
+                    "platform": run_metadata.get("platform"),
+                    "python_version": run_metadata.get("python_version"),
+                    "torch_version": run_metadata.get("torch_version"),
+                    "lightning_version": run_metadata.get("lightning_version"),
+                    "cpu_cores": run_metadata.get("cpu_cores"),
+                    "gpu_name": run_metadata.get("gpu_name"),
+                    "gpu_count": run_metadata.get("gpu_count"),
+                    "gpu_total_memory_gb": run_metadata.get("gpu_total_memory_gb"),
+                    "gpu_free_memory_gb_at_start": run_metadata.get(
+                        "gpu_free_memory_gb_at_start"
+                    ),
+                    "gpu_compute_capability": run_metadata.get("gpu_compute_capability"),
+                }
+            )
+
+        rows.append(row_data)
 
     out_df = pd.DataFrame(rows)
+    out_df = out_df.sort_values(by=["dataset", "seed"], ignore_index=True)
     output_path.mkdir(parents=True, exist_ok=True)
     out_df.to_csv(output_path / "results_and_parameters.csv", index=False)
-
-
-def export_model_info(
-    output_path: Path,
-    backbone: str,
-    model_registry: dict,
-) -> None:
-    """Export additional_info.json for leaderboard submission."""
-    display_name = backbone
-    model_size = "N/A"
-    for cat in model_registry.get("categories", {}).values():
-        if backbone in cat.get("models", {}):
-            info = cat["models"][backbone]
-            display_name = info.get("display_name", backbone)
-            model_size = info.get("params", "N/A")
-            break
-
-    data = {
-        "Paper Link": "N/A",
-        "Code Repository Link ": "N/A",
-        "License": "N/A",
-        "Number of HPO trials": "16",
-        "Additional information about submission": (
-            "GEO-Bench-2 VHR evaluation following standard protocol."
-        ),
-        "Comments on new models in submission": "",
-        "New model info": [
-            {
-                "model_display_name": display_name,
-                "model_size": model_size,
-                "unique_backbone_key": backbone,
-            }
-        ],
-    }
-
-    output_path.mkdir(parents=True, exist_ok=True)
-    with open(output_path / "additional_info.json", "w") as f:
-        json.dump(data, f, indent=2)

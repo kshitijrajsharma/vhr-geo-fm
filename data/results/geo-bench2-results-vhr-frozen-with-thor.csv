@@ -1,0 +1,12 @@
+Rank,Model,Category,# Params,Submission,Under 10M Resolution,Spacenet2,Treesatai,Flair2,Dynamic_Earthnet,Spacenet7
+1,DinoV3-ViT-L-SAT,Native-VHR-GeoFM,300M,80100fc6,55.4 ± 0.3,44.9 ± 1.1,1.9 ± 0.6,58.0 ± 2.7,71.9 ± 6.3,81.3 ± 0.8
+2,DinoV3-ConvNext-Large-WEB,CV-General-FM,230M,80100fc6,46.0 ± 0.3,36.4 ± 4.9,-18.7 ± 2.1,65.4 ± 2.7,33.2 ± 3.3,82.6 ± 0.7
+3,Clay-V1 ViT-B,Native-VHR-GeoFM,100M,80100fc6,38.0 ± 0.4,18.1 ± 3.7,-18.0 ± 1.1,51.8 ± 1.5,36.5 ± 1.8,89.2 ± 0.6
+4,DOFA-ViT 300M,Native-VHR-GeoFM,300M,80100fc6,36.4 ± 0.3,13.9 ± 1.8,-3.0 ± 0.6,57.7 ± 1.5,35.2 ± 1.9,73.3 ± 0.9
+5,ConvNext-XLarge-ImageNet,CV-General-FM,390M,80100fc6,35.6 ± 0.2,37.4 ± 1.8,-0.2 ± 0.5,38.9 ± 0.4,32.2 ± 1.2,82.2 ± 0.4
+6,Prithvi-EO-V2 600M TL,GeoFM-LowRes,600M,80100fc6,15.4 ± 0.3,7.5 ± 1.6,-28.9 ± 1.3,3.0 ± 1.7,37.7 ± 5.1,79.6 ± 1.2
+7,TerraMind-V1-Large,GeoFM-LowRes,300M,80100fc6,7.8 ± 0.1,-35.0 ± 1.1,-42.4 ± 4.4,-2.6 ± 2.0,81.5 ± 5.8,65.0 ± 1.4
+8,Resnet50-DeCUR,GeoFM-LowRes,25M,80100fc6,-0.5 ± 0.2,-37.8 ± 3.4,-39.8 ± 1.3,-4.1 ± 0.8,36.8 ± 3.7,68.1 ± 0.1
+9,Satlas-Resnet50,GeoFM-LowRes,25M,80100fc6,-12.5 ± 0.3,-67.1 ± 4.2,-65.2 ± 1.0,-21.0 ± 2.2,55.6 ± 14.7,65.5 ± 0.4
+10,Satlas-Swin 100M,GeoFM-LowRes,100M,80100fc6,-22.9 ± 0.3,-86.2 ± 2.2,-72.5 ± 0.6,-27.7 ± 3.1,35.7 ± 6.5,73.1 ± 1.2
+11,THOR-V1-Base,GeoFM-LowRes,86M,thor,-32.4 ± 0.1,-103.6 ± 1.5,-287.2 ± 10.9,-31.9 ± 2.9,70.3 ± 0.4,38.1 ± 0.2
