@@ -70,12 +70,28 @@ HPO (Optuna TPE)  ->  Seed Evaluation  ->  Scoring
 
 ## DINOv3 Setup
 
-Both DINOv3 models require downloading gated checkpoints:
+Both DINOv3 models require gated checkpoints (manual approval from Meta).
+
+**Download** via HuggingFace (request access first):
+
+- [facebook/dinov3-vitl16-pretrain-sat493m](https://huggingface.co/facebook/dinov3-vitl16-pretrain-sat493m)
+- [facebook/dinov3-convnext-large-pretrain-lvd1689m](https://huggingface.co/facebook/dinov3-convnext-large-pretrain-lvd1689m)
+
+Or request via Meta's portal: `ai.meta.com/resources/models-and-libraries/dinov3-downloads/`
+
+**Download** (after approval):
 
 ```sh
-# Direct URLs (no auth needed)
-export DINOV3_VITL16_CKPT="https://dl.fbaipublicfiles.com/dinov3/dinov3_vitl16/dinov3_vitl16_pretrain_sat493m-eadcf0ff.pth"
-export DINOV3_CONVNEXT_CKPT="https://dl.fbaipublicfiles.com/dinov3/dinov3_convnext_large/dinov3_convnext_large_pretrain_lvd1689m-61fa432d.pth"
+pip install huggingface_hub
+huggingface-cli download facebook/dinov3-vitl16-pretrain-sat493m --local-dir ./checkpoints
+huggingface-cli download facebook/dinov3-convnext-large-pretrain-lvd1689m --local-dir ./checkpoints
+```
+
+**Set env vars** to local paths (or add to `.env` for justfile):
+
+```sh
+export DINOV3_VITL16_CKPT="./checkpoints/dinov3_vitl16_pretrain_sat493m.pth"
+export DINOV3_CONVNEXT_CKPT="./checkpoints/dinov3_convnext_large_pretrain_lvd1689m.pth"
 ```
 
 ## Testing & CI

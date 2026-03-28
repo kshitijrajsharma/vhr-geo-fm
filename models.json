@@ -11,7 +11,7 @@
           "backbone_kwargs": {},
           "seg_out_indices": [5, 11, 17, 23],
           "cls_out_indices": [-1],
-          "_note": "Requires ckpt_path via env DINOV3_VITL16_CKPT. Direct: https://dl.fbaipublicfiles.com/dinov3/dinov3_vitl16/dinov3_vitl16_pretrain_sat493m-eadcf0ff.pth or HuggingFace (gated): https://huggingface.co/facebook/dinov3-vitl16-pretrain-sat493m"
+          "_note": "Gated. Set env DINOV3_VITL16_CKPT to local path. Download from HuggingFace: facebook/dinov3-vitl16-pretrain-sat493m"
         },
         "terratorch_dofa_large_patch16_224": {
           "display_name": "DOFA-ViT 300M",
@@ -63,7 +63,7 @@
           "backbone_kwargs": {},
           "seg_out_indices": [0, 1, 2, 3],
           "cls_out_indices": [-1],
-          "_note": "Requires ckpt_path via env DINOV3_CONVNEXT_CKPT. Direct: https://dl.fbaipublicfiles.com/dinov3/dinov3_convnext_large/dinov3_convnext_large_pretrain_lvd1689m-61fa432d.pth or HuggingFace (gated): https://huggingface.co/facebook/dinov3-convnext-large-pretrain-lvd1689m"
+          "_note": "Gated. Set env DINOV3_CONVNEXT_CKPT to local path. Download from HuggingFace: facebook/dinov3-convnext-large-pretrain-lvd1689m"
         },
         "timm_resnet50": {
           "display_name": "ResNet50-ImgNet",
