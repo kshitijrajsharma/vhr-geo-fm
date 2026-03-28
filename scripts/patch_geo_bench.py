@@ -106,9 +106,7 @@ def main() -> None:
         if set(bb_df["dataset"].unique()) != req_set:
             continue
 
-        bb_dim_iqms = compute_tools.bootstrap_iqm_aggregate(bb_df, metric=new_metric)[
-            new_metric
-        ]
+        bb_dim_iqms = compute_tools.bootstrap_iqm_aggregate(bb_df, metric=new_metric)[new_metric]
         dim_val, dim_err = bb_dim_iqms.mean(), sem(bb_dim_iqms)
 
         display_name = model_info["BACKBONE_NAMES"].get(backbone, backbone)

@@ -114,9 +114,9 @@ class _IndexSelectWrapper(nn.Module):
         super().__init__()
         self.backbone = backbone
         self._indices = indices
-        total = len(backbone.out_channels)
+        total = len(backbone.out_channels)  # ty: ignore[invalid-argument-type]
         resolved = [i if i >= 0 else total + i for i in indices]
-        self.out_channels = [backbone.out_channels[i] for i in resolved]
+        self.out_channels = [backbone.out_channels[i] for i in resolved]  # ty: ignore[not-subscriptable]
 
     def forward(self, x: torch.Tensor, **kw) -> list[torch.Tensor]:
         feats = self.backbone(x, **kw)
@@ -192,7 +192,7 @@ def create_task(
             model_factory="EncoderDecoderFactory",
             loss=config.loss,
             ignore_index=-100,
-            **common,
+            **common,  # ty: ignore[invalid-argument-type]
         )
 
     if config.task_type == "classification":
@@ -203,7 +203,7 @@ def create_task(
             model_factory="EncoderDecoderFactory",
             loss=config.loss,
             class_names=[str(i) for i in range(config.num_classes)],
-            **common,
+            **common,  # ty: ignore[invalid-argument-type]
         )
 
     if config.task_type == "detection":
@@ -219,7 +219,7 @@ def create_task(
             model_args=det_args,
             boxes_field="bbox_xyxy",
             labels_field="label",
-            **common,
+            **common,  # ty: ignore[invalid-argument-type]
         )
 
     raise ValueError(f"Unknown task type: {config.task_type}")

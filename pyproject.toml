@@ -19,6 +19,8 @@ dependencies = [
 
 [dependency-groups]
 dev = [
+    "pre-commit>=4.0",
+    "pytest>=8.0",
     "ruff>=0.14",
     "ty>=0.0.26",
 ]
@@ -30,12 +32,16 @@ line-length = 100
 [tool.ruff.lint]
 select = ["E", "F", "I", "W"]
 
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
 [tool.ty.src]
 exclude = ["scripts/patch_geo_bench.py"]
 
-[tool.hatch.build.targets.wheel]
-packages = ["eval"]
+[tool.uv.build-backend]
+module-name = "eval"
+module-root = ""
 
 [build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
+requires = ["uv_build>=0.7"]
+build-backend = "uv_build"

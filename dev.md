@@ -78,13 +78,17 @@ export DINOV3_VITL16_CKPT="https://dl.fbaipublicfiles.com/dinov3/dinov3_vitl16/d
 export DINOV3_CONVNEXT_CKPT="https://dl.fbaipublicfiles.com/dinov3/dinov3_convnext_large/dinov3_convnext_large_pretrain_lvd1689m-61fa432d.pth"
 ```
 
-## Verification
+## Testing & CI
 
 ```sh
-just test                                        # quick: ResNet50 x spacenet2
-just test model.backbone=timm_clay_v1_base       # quick: specific model
+just test                                        # run pytest suite
+just smoke                                       # quick: ResNet50 x spacenet2 (1% data, 1 epoch)
+just smoke model.backbone=timm_clay_v1_base      # quick: specific model
 just verify                                      # full: 9 models x 5 datasets
+just ci                                          # lint + typecheck + test
 ```
+
+Pre-commit hooks (ruff + ty) run on every commit. CI runs lint, typecheck, and pytest on push/PR to master.
 
 ## Key Protocol Decisions
 

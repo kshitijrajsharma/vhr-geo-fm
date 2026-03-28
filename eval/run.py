@@ -39,7 +39,7 @@ logging.getLogger("lightning.pytorch").setLevel(logging.WARNING)
 import lightning.fabric.plugins.io.torch_io as _torch_io  # noqa: E402
 
 _orig_pl_load = _torch_io.pl_load
-_torch_io.pl_load = lambda *a, **kw: _orig_pl_load(*a, **{**kw, "weights_only": False})
+_torch_io.pl_load = lambda *a, **kw: _orig_pl_load(*a, **{**kw, "weights_only": False})  # ty: ignore[invalid-assignment]
 
 optuna.logging.set_verbosity(optuna.logging.WARNING)
 log = logging.getLogger(__name__)

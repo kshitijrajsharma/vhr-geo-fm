@@ -2,6 +2,20 @@ defaults:
   - config
   - _self_
 
+hydra:
+  sweeper:
+    params:
+      model.backbone: >-
+        timm_resnet50,
+        timm_convnext_xlarge,
+        terratorch_dofa_large_patch16_224,
+        timm_clay_v1_base,
+        terratorch_satlas_swin_b_naip_si_rgb,
+        terratorch_satlas_swin_b_sentinel2_si_ms,
+        terratorch_ssl4eos12_resnet50_sentinel2_all_decur,
+        terratorch_terramind_v1_large,
+        terratorch_prithvi_eo_v2_600_tl
+
 # Quick verification: 1% data, 1 epoch, 1 trial, 1 seed
 data:
   datasets: [spacenet2, spacenet7, flair2, dynamic_earthnet, treesatai]
