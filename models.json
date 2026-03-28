@@ -6,22 +6,40 @@
         "terratorch_dinov3_vitl16": {
           "display_name": "DINOv3-ViT-L-SAT",
           "params": "300M",
-          "leaderboard_key": "dinov3_vitl16"
+          "leaderboard_key": "dinov3_vitl16",
+          "arch": "vit",
+          "backbone_kwargs": {},
+          "seg_out_indices": [5, 11, 17, 23],
+          "cls_out_indices": [-1],
+          "_note": "Requires ckpt_path via env DINOV3_VITL16_CKPT. Direct: https://dl.fbaipublicfiles.com/dinov3/dinov3_vitl16/dinov3_vitl16_pretrain_sat493m-eadcf0ff.pth or HuggingFace (gated): https://huggingface.co/facebook/dinov3-vitl16-pretrain-sat493m"
         },
         "terratorch_dofa_large_patch16_224": {
           "display_name": "DOFA-ViT 300M",
           "params": "300M",
-          "leaderboard_key": "dofa_large_patch16_224"
+          "leaderboard_key": "dofa_large_patch16_224",
+          "arch": "vit",
+          "backbone_kwargs": {"model_bands": ["RED", "GREEN", "BLUE"]},
+          "seg_out_indices": [5, 11, 17, 23],
+          "cls_out_indices": [-1]
         },
         "timm_clay_v1_base": {
           "display_name": "Clay-V1 ViT-B",
           "params": "100M",
-          "leaderboard_key": "clay_v1_base"
+          "leaderboard_key": "clay_v1_base",
+          "arch": "vit",
+          "backbone_kwargs": {"bands": ["red", "green", "blue"]},
+          "seg_out_indices": [2, 5, 8, 11],
+          "cls_out_indices": [-1]
         },
         "terratorch_satlas_swin_b_naip_si_rgb": {
           "display_name": "Satlas-SwinB-NAIP",
           "params": "100M",
-          "leaderboard_key": "satlas_swin_b_naip_si_rgb"
+          "leaderboard_key": "satlas_swin_b_naip_si_rgb",
+          "arch": "swin",
+          "backbone_kwargs": {"model_bands": ["RED", "GREEN", "BLUE"]},
+          "seg_out_indices": [0, 1, 2, 3],
+          "seg_decoder_channels": [256, 128, 64, 32],
+          "cls_out_indices": [-1]
         }
       }
     },
@@ -31,17 +49,30 @@
         "timm_convnext_xlarge": {
           "display_name": "ConvNext-XL-ImgNet",
           "params": "390M",
-          "leaderboard_key": "convnext_xlarge_fb_in22k"
+          "leaderboard_key": "convnext_xlarge_fb_in22k",
+          "arch": "cnn",
+          "backbone_kwargs": {},
+          "seg_out_indices": [0, 1, 2, 3],
+          "cls_out_indices": [-1]
         },
         "terratorch_dinov3_convnext_large": {
           "display_name": "DINOv3-ConvNext-WEB",
           "params": "230M",
-          "leaderboard_key": "dinov3_convnext_large"
+          "leaderboard_key": "dinov3_convnext_large",
+          "arch": "cnn",
+          "backbone_kwargs": {},
+          "seg_out_indices": [0, 1, 2, 3],
+          "cls_out_indices": [-1],
+          "_note": "Requires ckpt_path via env DINOV3_CONVNEXT_CKPT. Direct: https://dl.fbaipublicfiles.com/dinov3/dinov3_convnext_large/dinov3_convnext_large_pretrain_lvd1689m-61fa432d.pth or HuggingFace (gated): https://huggingface.co/facebook/dinov3-convnext-large-pretrain-lvd1689m"
         },
         "timm_resnet50": {
           "display_name": "ResNet50-ImgNet",
           "params": "25M",
-          "leaderboard_key": "resnet50"
+          "leaderboard_key": "resnet50",
+          "arch": "cnn",
+          "backbone_kwargs": {},
+          "seg_out_indices": [1, 2, 3, 4],
+          "cls_out_indices": [-1]
         }
       }
     },
@@ -51,22 +82,39 @@
         "terratorch_terramind_v1_large": {
           "display_name": "TerraMind-V1-L",
           "params": "300M",
-          "leaderboard_key": "terramind_v1_large"
+          "leaderboard_key": "terramind_v1_large",
+          "arch": "vit",
+          "backbone_kwargs": {},
+          "seg_out_indices": [5, 11, 17, 23],
+          "cls_out_indices": [-1]
         },
         "terratorch_prithvi_eo_v2_600_tl": {
           "display_name": "Prithvi-V2-600M",
           "params": "600M",
-          "leaderboard_key": "prithvi_eo_v2_600_tl"
+          "leaderboard_key": "prithvi_eo_v2_600_tl",
+          "arch": "vit",
+          "backbone_kwargs": {"bands": ["RED", "GREEN", "BLUE"], "num_frames": 1},
+          "seg_out_indices": [7, 15, 23, 31],
+          "cls_out_indices": [-1]
         },
         "terratorch_satlas_swin_b_sentinel2_si_ms": {
           "display_name": "Satlas-Swin 100M",
           "params": "100M",
-          "leaderboard_key": "satlas_swin_b_sentinel2_si_ms"
+          "leaderboard_key": "satlas_swin_b_sentinel2_si_ms",
+          "arch": "swin",
+          "backbone_kwargs": {"model_bands": ["RED", "GREEN", "BLUE"]},
+          "seg_out_indices": [0, 1, 2, 3],
+          "seg_decoder_channels": [256, 128, 64, 32],
+          "cls_out_indices": [-1]
         },
         "terratorch_ssl4eos12_resnet50_sentinel2_all_decur": {
           "display_name": "ResNet50-DeCUR",
           "params": "25M",
-          "leaderboard_key": "ssl4eos12_resnet50_sentinel2_all_decur"
+          "leaderboard_key": "ssl4eos12_resnet50_sentinel2_all_decur",
+          "arch": "cnn",
+          "backbone_kwargs": {"model_bands": ["RED", "GREEN", "BLUE"]},
+          "seg_out_indices": [0, 1, 2, 3],
+          "cls_out_indices": [-1]
         }
       }
     }

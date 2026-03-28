@@ -34,6 +34,22 @@ from eval.subsample import SubsampledDataModule
 
 warnings.filterwarnings("ignore")
 logging.getLogger("lightning.pytorch").setLevel(logging.WARNING)
+
+# PyTorch 2.6+ defaults to weights_only=True for torch.load, which rejects
+# terratorch/torchgeo custom classes in Lightning checkpoints.
+# Patch Lightning's checkpoint loader to allow these trusted classes.
+import lightning.fabric.plugins.io.torch_io as _torch_io  # noqa: E402
+
+_original_pl_load = _torch_io.pl_load
+
+
+def _patched_pl_load(*args, **kwargs):  # type: ignore[override]
+    kwargs["weights_only"] = False
+    return _original_pl_load(*args, **kwargs)
+
+
+_torch_io.pl_load = _patched_pl_load
+
 optuna.logging.set_verbosity(optuna.logging.WARNING)
 
 log = logging.getLogger(__name__)
@@ -129,6 +145,7 @@ def _train_and_eval(
             mode=config.metric_direction,
             save_top_k=1,
             filename="best",
+            save_weights_only=True,
         ),
     ]
 
@@ -158,7 +175,13 @@ def _train_and_eval(
 
     best_ckpt = os.path.join(ckpt_dir, "best.ckpt")
     ckpt_path = best_ckpt if os.path.exists(best_ckpt) else None
-    test_results = trainer.test(task, datamodule=dm, ckpt_path=ckpt_path)
+    try:
+        test_results = trainer.test(task, datamodule=dm, ckpt_path=ckpt_path)
+    except (ValueError, RuntimeError) as e:
+        # PyTorch 2.6 / torchgeo Weights enum incompatibility during checkpoint unpickling.
+        # Fall back to testing with current model state (last epoch weights).
+        log.warning("Checkpoint reload failed (%s), using last-epoch weights for test.", e)
+        test_results = trainer.test(task, datamodule=dm, ckpt_path=None)
 
     test_key = config.metric_key.replace("val/", "test/").replace("val_", "test_")
     test_metric = test_results[0].get(test_key, 0.0) if test_results else 0.0
