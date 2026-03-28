@@ -1,0 +1,7 @@
+defaults:
+  - config
+  - _self_
+
+# Full finetune — all datasets including detection
+training:
+  mode: finetune

@@ -1,0 +1,10 @@
+defaults:
+  - config
+  - _self_
+
+# Frozen encoder — seg/cls datasets only (detection requires finetune)
+training:
+  mode: frozen
+
+data:
+  datasets: [spacenet2, spacenet7, flair2, dynamic_earthnet, treesatai]

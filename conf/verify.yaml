@@ -1,0 +1,29 @@
+defaults:
+  - config
+  - _self_
+
+# Quick verification: 1% data, 1 epoch, 1 trial, 1 seed
+data:
+  datasets: [spacenet2, spacenet7, flair2, dynamic_earthnet, treesatai]
+  data_pct: 1
+
+training:
+  mode: frozen
+  max_epochs: 1
+  early_stop_patience: 1
+
+performance:
+  num_workers: 4
+
+hpo:
+  n_trials: 1
+  lr_min: 1e-4
+  lr_max: 1e-4
+  batch_sizes: [4]
+
+eval:
+  seeds: [42]
+  n_bootstrap: 10
+
+output:
+  dir: ./results/verify/${model.backbone}

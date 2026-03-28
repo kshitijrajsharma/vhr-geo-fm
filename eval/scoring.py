@@ -1,4 +1,4 @@
-"""Score normalization, IQM aggregation, and result export following GEO-Bench-2."""
+"""Score normalization, IQM aggregation, and CSV export per GEO-Bench-2."""
 
 from __future__ import annotations
 
@@ -8,8 +8,7 @@ import numpy as np
 import pandas as pd
 from scipy.stats import sem, trim_mean
 
-# Normalizer ranges from GEO-Bench-2 leaderboard normalizer.json
-# Each entry: [worst_model_score, best_model_score]
+# Min-max ranges from GEO-Bench-2 leaderboard normalizer.json
 NORMALIZER: dict[str, tuple[float, float]] = {
     "spacenet2": (0.8431392908096313, 0.8844738006591797),
     "spacenet7": (0.3912872672080993, 0.6402554512023926),
@@ -21,10 +20,9 @@ NORMALIZER: dict[str, tuple[float, float]] = {
 }
 
 
-def normalize_score(dataset: str, raw_value: float) -> float:
-    """Normalize a raw metric to [0, 1] using leaderboard min-max."""
+def normalize_score(dataset: str, raw: float) -> float:
     mn, mx = NORMALIZER[dataset]
-    return (raw_value - mn) / (mx - mn)
+    return (raw - mn) / (mx - mn)
 
 
 def iqm(scores) -> float:
@@ -38,49 +36,35 @@ def bootstrap_aggregate(
     n_bootstrap: int = 100,
     seed: int = 100,
 ) -> tuple[float, float]:
-    """Stratified bootstrap IQM aggregation across datasets.
-
-    Returns (mean_score, sem) both scaled to 0-100.
-    """
+    """Stratified bootstrap IQM. Returns (mean, sem) scaled to 0-100."""
     rng = np.random.RandomState(seed)
-    bootstrap_iqms = []
+    iqms = []
     for _ in range(n_bootstrap):
         sampled = df.groupby("dataset")[metric_col].apply(
             lambda x: rng.choice(x.values, size=len(x), replace=True)
         )
-        all_sampled = np.concatenate(sampled.values)
-        bootstrap_iqms.append(iqm(all_sampled))
-
-    return float(np.mean(bootstrap_iqms) * 100), float(sem(bootstrap_iqms) * 100)
+        iqms.append(iqm(np.concatenate(sampled.values)))
+    return float(np.mean(iqms) * 100), float(sem(iqms) * 100)
 
 
 def compute_scores(results: list[dict]) -> pd.DataFrame:
-    """Compute normalized scores from raw results."""
     df = pd.DataFrame(results)
-    df["normalized"] = df.apply(
-        lambda row: normalize_score(row["dataset"], row["test_metric"]), axis=1
-    )
+    df["normalized"] = df.apply(lambda r: normalize_score(r["dataset"], r["test_metric"]), axis=1)
     return df
 
 
 def print_table(df: pd.DataFrame, datasets: list[str]) -> None:
-    """Print per-dataset scores and aggregate."""
-    print(f"\n{'=' * 60}")
-    print("  Results")
-    print(f"{'=' * 60}")
-
+    print(f"\n{'=' * 60}\n  Results\n{'=' * 60}")
     for ds in datasets:
-        ds_data = df[df["dataset"] == ds]["normalized"]
-        if len(ds_data) == 0:
+        d = df[df["dataset"] == ds]
+        if d.empty:
             continue
-        score = iqm(ds_data) * 100
-        ds_sem = float(sem(ds_data)) * 100
-        raw_data = df[df["dataset"] == ds]["test_metric"]
-        raw_score = iqm(raw_data)
-        print(f"  {ds:20s}: {score:6.1f} +/- {ds_sem:4.1f}  (raw: {raw_score:.4f})")
+        score = iqm(d["normalized"]) * 100
+        raw = iqm(d["test_metric"])
+        print(f"  {ds:20s}: {score:6.1f} +/- {sem(d['normalized']) * 100:4.1f}  (raw: {raw:.4f})")
 
-    agg_score, agg_sem = bootstrap_aggregate(df)
-    print(f"\n  {'Under 10M Resolution':20s}: {agg_score:6.1f} +/- {agg_sem:4.1f}")
+    agg, agg_sem = bootstrap_aggregate(df)
+    print(f"\n  {'Under 10M Resolution':20s}: {agg:6.1f} +/- {agg_sem:4.1f}")
 
 
 def export_csv(
@@ -90,53 +74,30 @@ def export_csv(
     frozen: bool,
     run_metadata: dict | None = None,
 ) -> None:
-    """Export concise, comparable experiment results."""
     mode = "frozen" if frozen else "full_ft"
     rows = []
-    for _, row in df.iterrows():
-        row_data = {
-            "dataset": row["dataset"],
-            "metric": row["metric_leaderboard"],
-            "test_metric": row["test_metric"],
-            "normalized": row["normalized"],
-            "seed": row["seed"],
+    for _, r in df.iterrows():
+        row = {
+            "dataset": r["dataset"],
+            "metric": r["metric_leaderboard"],
+            "test_metric": r["test_metric"],
+            "normalized": r["normalized"],
+            "seed": r["seed"],
             "backbone": backbone,
             "mode": mode,
-            "decoder": row["decoder"],
-            "batch_size": row["batch_size"],
-            "lr": row["lr"],
-            "weight_decay": row["weight_decay"],
-            "hpo_trials": row["n_trials"],
-            "early_stop_patience": row["early_stop_patience"],
-            "data_pct": row["data_pct"],
-            "run_seconds": row.get("run_seconds", None),
+            "decoder": r["decoder"],
+            "batch_size": r["batch_size"],
+            "lr": r["lr"],
+            "weight_decay": r["weight_decay"],
+            "hpo_trials": r["n_trials"],
+            "early_stop_patience": r["early_stop_patience"],
+            "data_pct": r["data_pct"],
+            "run_seconds": r.get("run_seconds"),
         }
+        if run_metadata:
+            row |= run_metadata
+        rows.append(row)
 
-        if run_metadata is not None:
-            row_data.update(
-                {
-                    "run_started_at_utc": run_metadata.get("started_at_utc"),
-                    "run_ended_at_utc": run_metadata.get("ended_at_utc"),
-                    "total_run_seconds": run_metadata.get("total_run_seconds"),
-                    "hostname": run_metadata.get("hostname"),
-                    "platform": run_metadata.get("platform"),
-                    "python_version": run_metadata.get("python_version"),
-                    "torch_version": run_metadata.get("torch_version"),
-                    "lightning_version": run_metadata.get("lightning_version"),
-                    "cpu_cores": run_metadata.get("cpu_cores"),
-                    "gpu_name": run_metadata.get("gpu_name"),
-                    "gpu_count": run_metadata.get("gpu_count"),
-                    "gpu_total_memory_gb": run_metadata.get("gpu_total_memory_gb"),
-                    "gpu_free_memory_gb_at_start": run_metadata.get(
-                        "gpu_free_memory_gb_at_start"
-                    ),
-                    "gpu_compute_capability": run_metadata.get("gpu_compute_capability"),
-                }
-            )
-
-        rows.append(row_data)
-
-    out_df = pd.DataFrame(rows)
-    out_df = out_df.sort_values(by=["dataset", "seed"], ignore_index=True)
+    out = pd.DataFrame(rows).sort_values(["dataset", "seed"], ignore_index=True)
     output_path.mkdir(parents=True, exist_ok=True)
-    out_df.to_csv(output_path / "results_and_parameters.csv", index=False)
+    out.to_csv(output_path / "results.csv", index=False)

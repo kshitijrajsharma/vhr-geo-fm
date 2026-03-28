@@ -15,12 +15,10 @@ model:
   pretrained: true
 
 training:
-  mode: frozen # frozen | finetune
+  mode: frozen   # frozen | finetune
   max_epochs: 50
   early_stop_patience: 10
   weight_decay: 0.01
-  optimizer: AdamW
-  scheduler: ReduceLROnPlateau
   precision: "16-mixed"
 
 performance:
@@ -35,18 +33,10 @@ hpo:
   n_trials: 16
   lr_min: 1e-6
   lr_max: 1e-3
-  batch_sizes:
-    - 8
-    - 16
-    - 32
+  batch_sizes: [8, 16, 32]
 
 eval:
-  seeds:
-    - 205
-    - 913
-    - 1829
-    - 2007
-    - 2254
+  seeds: [205, 913, 1829, 2007, 2254]
   n_bootstrap: 100
 
 output:

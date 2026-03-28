@@ -1,4 +1,4 @@
-"""Task factory for GEO-Bench-2 evaluation using terratorch built-in tasks."""
+"""Task factory -- builds terratorch tasks matching GEO-Bench-2 protocol."""
 
 from __future__ import annotations
 
@@ -20,113 +20,95 @@ from eval.datasets import DatasetConfig
 
 MODEL_REGISTRY_PATH = Path(__file__).resolve().parent.parent / "models.json"
 
-
-def _load_model_registry() -> dict[str, dict]:
-    """Load the model registry and flatten to backbone → config mapping."""
-    with open(MODEL_REGISTRY_PATH) as f:
-        registry = json.load(f)
-    flat: dict[str, dict] = {}
-    for cat in registry["categories"].values():
-        for backbone, info in cat["models"].items():
-            flat[backbone] = info
-    return flat
-
-
-_MODEL_REGISTRY = _load_model_registry()
-
-# Backbones that don't accept out_indices in their constructor
+# Backbones that don't support out_indices (select post-hoc instead)
 _SKIP_OUT_INDICES = {
     "terratorch_terramind_v1_large",
     "terratorch_dinov3_vitl16",
     "terratorch_dinov3_convnext_large",
 }
 
+_DEFAULT_INFO: dict[str, Any] = {
+    "arch": "cnn",
+    "backbone_kwargs": {},
+    "seg_out_indices": [1, 2, 3, 4],
+    "cls_out_indices": [-1],
+}
 
-def _get_model_info(backbone: str) -> dict:
-    """Get model info from registry, with defaults for unknown models."""
-    if backbone in _MODEL_REGISTRY:
-        return _MODEL_REGISTRY[backbone]
+
+def _load_registry() -> dict[str, dict]:
+    with open(MODEL_REGISTRY_PATH) as f:
+        registry = json.load(f)
     return {
-        "arch": "cnn",
-        "backbone_kwargs": {},
-        "seg_out_indices": [1, 2, 3, 4],
-        "cls_out_indices": [-1],
+        backbone: info
+        for cat in registry["categories"].values()
+        for backbone, info in cat["models"].items()
     }
 
 
-def _build_backbone_kwargs(
-    backbone: str, pretrained: bool, task_type: str, img_size: int,
-) -> dict[str, Any]:
-    """Build backbone-specific kwargs from the model registry."""
-    info = _get_model_info(backbone)
-    bk: dict[str, Any] = {}
-    bk["pretrained"] = pretrained
+_REGISTRY = _load_registry()
 
-    # Add model-specific backbone kwargs (model_bands, bands, num_frames, etc.)
-    for k, v in info.get("backbone_kwargs", {}).items():
-        bk[k] = v
+
+def _info(backbone: str) -> dict:
+    return _REGISTRY.get(backbone, _DEFAULT_INFO)
+
+
+def _out_indices_key(task_type: str) -> str:
+    return "seg_out_indices" if task_type in ("segmentation", "detection") else "cls_out_indices"
+
+
+def _backbone_kwargs(
+    backbone: str, pretrained: bool, task_type: str, img_size: int
+) -> dict[str, Any]:
+    info = _info(backbone)
+    bk: dict[str, Any] = {"pretrained": pretrained, **info.get("backbone_kwargs", {})}
 
     if backbone not in _SKIP_OUT_INDICES:
-        if task_type in ("segmentation", "detection"):
-            bk["out_indices"] = info.get("seg_out_indices", [1, 2, 3, 4])
-        else:
-            bk["out_indices"] = info.get("cls_out_indices", [-1])
+        key = _out_indices_key(task_type)
+        bk["out_indices"] = info.get(key, _DEFAULT_INFO[key])
 
-    # DINOv3 models require ckpt_path for pretrained weights (gated by Meta)
-    if backbone == "terratorch_dinov3_vitl16":
-        ckpt = os.environ.get("DINOV3_VITL16_CKPT")
-        if ckpt:
-            bk["ckpt_path"] = ckpt
-    elif backbone == "terratorch_dinov3_convnext_large":
-        ckpt = os.environ.get("DINOV3_CONVNEXT_CKPT")
+    # DINOv3: gated checkpoints via env vars
+    _CKPT_ENV = {
+        "terratorch_dinov3_vitl16": "DINOV3_VITL16_CKPT",
+        "terratorch_dinov3_convnext_large": "DINOV3_CONVNEXT_CKPT",
+    }
+    if backbone in _CKPT_ENV:
+        ckpt = os.environ.get(_CKPT_ENV[backbone])
         if ckpt:
             bk["ckpt_path"] = ckpt
 
-    # ViT models that need img_size for position embedding interpolation.
-    # terratorch pads images to multiples of 2*patch_size (see pad_images in models/utils.py),
-    # so we must match the padded size for pos_embed initialization.
+    # ViT img_size must match terratorch pad_images (doubles patch_size)
     if "dofa" in backbone or backbone == "timm_clay_v1_base":
-        patch_size = 16 if "dofa" in backbone else 8  # Clay uses 8x8 patches
-        effective_patch = patch_size * 2  # terratorch doubles for decoder compatibility
-        padded_size = math.ceil(img_size / effective_patch) * effective_patch
-        bk["img_size"] = padded_size
+        ps = 16 if "dofa" in backbone else 8
+        bk["img_size"] = math.ceil(img_size / (ps * 2)) * (ps * 2)
 
     return bk
 
 
 def _build_backbone(backbone: str, pretrained: bool, task_type: str, img_size: int) -> nn.Module:
-    """Build backbone module with necessary wrappers for out_channels correctness."""
     from terratorch.registry import BACKBONE_REGISTRY
 
-    bk = _build_backbone_kwargs(backbone, pretrained, task_type, img_size)
-    model = BACKBONE_REGISTRY.build(backbone, **bk)
+    model = BACKBONE_REGISTRY.build(
+        backbone, **_backbone_kwargs(backbone, pretrained, task_type, img_size)
+    )
+    info = _info(backbone)
+    key = _out_indices_key(task_type)
 
-    info = _get_model_info(backbone)
-
-    # For TerraMind/DINOv3 (no out_indices), select specific layers post-hoc
+    # Post-hoc layer selection for backbones without out_indices
     if backbone in _SKIP_OUT_INDICES:
-        if task_type in ("segmentation", "detection"):
-            indices = info.get("seg_out_indices", [5, 11, 17, 23])
-        else:
-            indices = info.get("cls_out_indices", [-1])
-        model = _IndexSelectWrapper(model, indices)
+        model = _IndexSelectWrapper(model, info.get(key, [5, 11, 17, 23]))
 
-    # Fix out_channels metadata when backbone reports all layers but out_indices filters
-    # (e.g. Prithvi reports 32 out_channels but only returns 4 features with out_indices)
-    if task_type in ("segmentation", "detection"):
-        expected_indices = info.get("seg_out_indices", [1, 2, 3, 4])
-    else:
-        expected_indices = info.get("cls_out_indices", [-1])
-    if hasattr(model, "out_channels") and len(model.out_channels) != len(expected_indices):
+    # Fix out_channels when backbone reports all layers but out_indices filters
+    expected = info.get(key, _DEFAULT_INFO[key])
+    if hasattr(model, "out_channels") and len(model.out_channels) != len(expected):
         total = len(model.out_channels)
-        resolved = [i if i >= 0 else total + i for i in expected_indices]
+        resolved = [i if i >= 0 else total + i for i in expected]
         model.out_channels = [model.out_channels[i] for i in resolved]
 
     return model
 
 
 class _IndexSelectWrapper(nn.Module):
-    """Select specific feature indices from a backbone that returns all layers."""
+    """Selects specific feature indices from backbones returning all layers."""
 
     def __init__(self, backbone: nn.Module, indices: list[int]):
         super().__init__()
@@ -136,102 +118,53 @@ class _IndexSelectWrapper(nn.Module):
         resolved = [i if i >= 0 else total + i for i in indices]
         self.out_channels = [backbone.out_channels[i] for i in resolved]
 
-    def forward(self, x: torch.Tensor, **kwargs) -> list[torch.Tensor]:
-        features = self.backbone(x, **kwargs)
-        total = len(features)
-        resolved = [i if i >= 0 else total + i for i in self._indices]
-        return [features[i] for i in resolved]
+    def forward(self, x: torch.Tensor, **kw) -> list[torch.Tensor]:
+        feats = self.backbone(x, **kw)
+        n = len(feats)
+        return [feats[i if i >= 0 else n + i] for i in self._indices]
 
 
-def _build_necks(backbone: str, task_type: str) -> list[dict]:
-    """Build the neck configuration for the model following GEO-Bench-2 protocol.
-
-    Paper Section 3.3: "For transformer-based models, LearnedFeatureInterpolation,
-    available in TerraTorch, is applied to hierarchically structure the encoder output
-    before passing it to the UNet."
-
-    This maps to terratorch's neck chain:
-      - ReshapeTokensToImage: (B, N, C) → (B, C, H, W) for ViT outputs
-      - LearnedInterpolateToPyramidal: creates multi-scale pyramid for UNet decoder
-      - PermuteDims: NHWC → NCHW for Swin outputs
-      - SelectIndices + AggregateTokens: for classification with ViT
-    """
-    info = _get_model_info(backbone)
-    arch = info.get("arch", "cnn")
-
+def _necks(backbone: str, task_type: str) -> list[dict]:
+    """Terratorch neck chain per GEO-Bench-2 Section 3.3."""
+    arch = _info(backbone).get("arch", "cnn")
     if arch == "cnn":
         return []
 
-    if task_type in ("segmentation", "detection"):
-        if arch == "vit":
+    spatial = task_type in ("segmentation", "detection")
+
+    if arch == "vit":
+        if spatial:
             return [
                 {"name": "ReshapeTokensToImage", "remove_cls_token": True},
                 {"name": "LearnedInterpolateToPyramidal"},
             ]
-        if arch == "swin":
-            # Swin outputs NHWC, permute to NCHW. Already pyramidal, no interpolation needed.
-            return [
-                {"name": "PermuteDims", "new_order": [0, 3, 1, 2]},
-            ]
-    else:
-        # Classification: aggregate tokens to a single vector
-        if arch == "vit":
-            return [
-                {"name": "AggregateTokens", "pooling": "mean", "drop_cls": True},
-            ]
-        if arch == "swin":
-            # Swin outputs NHWC; permute to NCHW before AggregateTokens (which assumes NCHW)
-            return [
-                {"name": "PermuteDims", "new_order": [0, 3, 1, 2]},
-                {"name": "AggregateTokens", "pooling": "mean"},
-            ]
+        return [{"name": "AggregateTokens", "pooling": "mean", "drop_cls": True}]
+
+    if arch == "swin":
+        base = [{"name": "PermuteDims", "new_order": [0, 3, 1, 2]}]
+        if not spatial:
+            base.append({"name": "AggregateTokens", "pooling": "mean"})
+        return base
 
     return []
 
 
-def _seg_model_args(backbone: str, num_classes: int, pretrained: bool, img_size: int) -> dict:
-    """Model args for semantic segmentation: UNet decoder (paper Section 3.3)."""
-    info = _get_model_info(backbone)
-    decoder_channels = info.get("seg_decoder_channels", [512, 256, 128, 64])
-
-    backbone_module = _build_backbone(backbone, pretrained, "segmentation", img_size)
-    necks = _build_necks(backbone, "segmentation")
-
-    model_args: dict[str, Any] = {
-        "backbone": backbone_module,
-        "decoder": "UNetDecoder",
-        "decoder_channels": decoder_channels,
-        "necks": necks,
+def _model_args(
+    backbone: str, num_classes: int, pretrained: bool, img_size: int, task_type: str
+) -> dict:
+    info = _info(backbone)
+    args: dict[str, Any] = {
+        "backbone": _build_backbone(backbone, pretrained, task_type, img_size),
+        "necks": _necks(backbone, task_type),
         "num_classes": num_classes,
         "head_dropout": 0.1,
     }
-    return model_args
-
-
-def _cls_model_args(backbone: str, num_classes: int, pretrained: bool, img_size: int) -> dict:
-    """Model args for classification: IdentityDecoder + linear head (paper Section 3.3)."""
-    backbone_module = _build_backbone(backbone, pretrained, "classification", img_size)
-    necks = _build_necks(backbone, "classification")
-
-    model_args: dict[str, Any] = {
-        "backbone": backbone_module,
-        "decoder": "IdentityDecoder",
-        "necks": necks,
-        "num_classes": num_classes,
-        "head_dropout": 0.1,
-    }
-    return model_args
-
-
-def _det_model_args(backbone: str, num_classes: int, pretrained: bool) -> dict:
-    """Model args for object detection: Faster R-CNN + FPN."""
-    return {
-        "backbone": backbone,
-        "backbone_pretrained": pretrained,
-        "num_classes": num_classes,
-        "framework": "faster-rcnn",
-        "in_channels": 3,
-    }
+    if task_type == "segmentation":
+        args["decoder"] = "UNetDecoder"
+        args["decoder_channels"] = info.get("seg_decoder_channels", [512, 256, 128, 64])
+    else:
+        args["decoder"] = "IdentityDecoder"
+    return args
 
 
 def create_task(
@@ -242,57 +175,51 @@ def create_task(
     frozen: bool = True,
     pretrained: bool = True,
 ):
-    """Create a terratorch task matching GEO-Bench-2 protocol."""
-    freeze_backbone = frozen
-    freeze_decoder = False
+    """Create terratorch task. Constant LR per GEO-Bench-2 protocol (no scheduler)."""
+    common = {
+        "freeze_backbone": frozen,
+        "freeze_decoder": False,
+        "lr": lr,
+        "optimizer": "AdamW",
+        "optimizer_hparams": {"weight_decay": weight_decay},
+    }
 
     if config.task_type == "segmentation":
-        model_args = _seg_model_args(backbone, config.num_classes, pretrained, config.img_size)
         return SemanticSegmentationTask(
-            model_args=model_args,
+            model_args=_model_args(
+                backbone, config.num_classes, pretrained, config.img_size, "segmentation"
+            ),
             model_factory="EncoderDecoderFactory",
             loss=config.loss,
             ignore_index=-100,
-            freeze_backbone=freeze_backbone,
-            freeze_decoder=freeze_decoder,
-            lr=lr,
-            optimizer="AdamW",
-            optimizer_hparams={"weight_decay": weight_decay},
-            # GEO-Bench-2 protocol: constant LR (no scheduler).
-            # Paper Section 6.3.8-6.3.9 ablated cosine/warmup, found "inconclusive".
+            **common,
         )
 
     if config.task_type == "classification":
-        model_args = _cls_model_args(backbone, config.num_classes, pretrained, config.img_size)
         return MultiLabelClassificationTask(
-            model_args=model_args,
+            model_args=_model_args(
+                backbone, config.num_classes, pretrained, config.img_size, "classification"
+            ),
             model_factory="EncoderDecoderFactory",
             loss=config.loss,
-            freeze_backbone=freeze_backbone,
-            freeze_decoder=freeze_decoder,
-            lr=lr,
-            optimizer="AdamW",
-            optimizer_hparams={"weight_decay": weight_decay},
-            # GEO-Bench-2 protocol: constant LR (no scheduler).
-            # Paper Section 6.3.8-6.3.9 ablated cosine/warmup, found "inconclusive".
             class_names=[str(i) for i in range(config.num_classes)],
+            **common,
         )
 
     if config.task_type == "detection":
-        model_args = _det_model_args(backbone, config.num_classes, pretrained)
+        det_args = {
+            "backbone": backbone,
+            "backbone_pretrained": pretrained,
+            "num_classes": config.num_classes,
+            "framework": "faster-rcnn",
+            "in_channels": 3,
+        }
         return ObjectDetectionTask(
             model_factory="ObjectDetectionModelFactory",
-            model_args=model_args,
-            freeze_backbone=freeze_backbone,
-            freeze_decoder=freeze_decoder,
-            lr=lr,
-            optimizer="AdamW",
-            optimizer_hparams={"weight_decay": weight_decay},
-            # GEO-Bench-2 protocol: constant LR (no scheduler).
-            # Paper Section 6.3.8-6.3.9 ablated cosine/warmup, found "inconclusive".
+            model_args=det_args,
             boxes_field="bbox_xyxy",
             labels_field="label",
+            **common,
         )
 
-    msg = f"Unknown task type: {config.task_type}"
-    raise ValueError(msg)
+    raise ValueError(f"Unknown task type: {config.task_type}")
